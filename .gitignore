@@ -1,0 +1,15 @@
+# backup, swap
+*.swp
+*~
+*.bak
+
+# logs
+*.log
+/server/logs
+
+# macOS
+.DS_Store
+Icon[]
+
+# keep
+!.keep

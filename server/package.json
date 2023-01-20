@@ -1,0 +1,16 @@
+{
+  "name": "asciidoc-preview-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "asciidoctor": "^2.2.6",
+    "asciidoctor-kroki": "^0.16.0",
+    "express": "^4.18.2"
+  }
+}

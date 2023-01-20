@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>AsciiDoc Preview Server</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+      var es = new EventSource("/api/actions/subscribe")
+      es.onmessage = (e) => { window.location.reload() }
+    </script>
+  </head>
+  <body>
+    <p>😴 Server is waiting ... currently is no AsciiDoc file to preview!</p>
+  </body>
+</html>
