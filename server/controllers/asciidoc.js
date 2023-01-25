@@ -34,7 +34,7 @@ function convertWithAsciidoctorJs(file) {
   return asciidoctor.convertFile(file, {
     to_file: false,
     standalone: true,
-    safe: 'safe',
+    safe: 'unsafe', // unsafe: access files outside of the parent directory
     attributes: {
       webfonts: '', // use webfonts
       'data-uri': '', // embed images (base64)
