@@ -30,7 +30,11 @@ Therefore, many things are not solved optimally and partly implemented twice (pl
 
 ## Installation
 
-⏳ ... follows soon
+### [packer](https://github.com/wbthomason/packer.nvim)
+
+```lua
+use 'tigion/nvim-asciidoc-preview'
+```
 
 ## Configuration
 
