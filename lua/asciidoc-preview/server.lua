@@ -12,27 +12,29 @@ TODO: execute command with:
 ]]
 --
 
+local config = require 'asciidoc-preview.config'
+
 local M = {}
 
-local path = vim.g.tigion_asciidocPreview_rootDir
-
-local apiURL = {
-  hi = 'http://localhost:11235/api/hi',
-  file = 'http://localhost:11235/api/file',
-  action = {
-    notifyPage = 'http://localhost:11235/api/actions/notify?type=page', -- TODO: Node.js API
-    notifyContent = 'http://localhost:11235/api/actions/notify?type=content', -- TODO: Node.js API
-    stop = 'http://localhost:11235/api/actions/stop',
+local apiURLs = {
+  hi = config.server.url .. '/api/hi',
+  file = config.server.url .. '/api/file',
+  actions = {
+    notify = {
+      page = config.server.url .. '/api/actions/notify?type=page',
+      content = config.server.url .. '/api/actions/notify?type=content',
+    },
+    stop = config.server.url .. '/api/actions/stop',
   },
 }
 
 local command = {
-  start = path .. '/server/scripts/start.sh',
-  stop = 'curl -s -X POST ' .. apiURL.action.stop,
-  hi = 'curl -s -X GET ' .. apiURL.hi,
-  putFile = 'curl -s -X PUT ' .. apiURL.file,
-  notifyPage = 'curl -s -X POST ' .. apiURL.action.notifyPage,
-  notifyContent = 'curl -s -X POST ' .. apiURL.action.notifyContent,
+  start = config.server.start,
+  postStop = 'curl -s -X POST ' .. apiURLs.actions.stop,
+  getHi = 'curl -s -X GET ' .. apiURLs.hi,
+  putFile = 'curl -s -X PUT ' .. apiURLs.file,
+  postNotifyPage = 'curl -s -X POST ' .. apiURLs.actions.notify.page,
+  postNotifyContent = 'curl -s -X POST ' .. apiURLs.actions.notify.content,
 }
 
 local function execCommand(cmd, serverMustRun)
@@ -45,10 +47,10 @@ end
 
 -- check if server is running and answers with the correct hi message
 function M.isRunning()
-  local handle = io.popen(command.hi)
+  local handle = io.popen(command.getHi)
   if handle then
     local read = handle:read '*a'
-    if read and read ~= '' and vim.json.decode(read).hi == 'Coffee please' then
+    if read and read ~= '' and vim.json.decode(read).hi == config.server.hi then
       return true
     else
       return false
@@ -76,7 +78,7 @@ function M.start()
 end
 
 -- stop server
-function M.stop() execCommand(command.stop) end
+function M.stop() execCommand(command.postStop) end
 
 -- send file to server
 function M.sendFile(file)
@@ -86,9 +88,9 @@ function M.sendFile(file)
 end
 
 -- send notify to server (page)
-function M.sendPageNotify() execCommand(command.notifyPage) end
+function M.sendPageNotify() execCommand(command.postNotifyPage) end
 
 -- send notify to server (content)
-function M.sendContentNotify() execCommand(command.notifyContent) end
+function M.sendContentNotify() execCommand(command.postNotifyContent) end
 
 return M

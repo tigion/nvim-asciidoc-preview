@@ -1,13 +1,12 @@
--- plugin.lua
+-- init.lua
+
+-- extra plugin.lua needed?
 
 local server = require 'asciidoc-preview.server'
 local helper = require 'asciidoc-preview.helper'
+local config = require 'asciidoc-preview.config'
 
 local M = {}
-
-local config = {
-  notifyType = 'page', -- TODO: use in config (page / content)
-}
 
 -- create auto commands
 local function createAutocmds()
@@ -52,6 +51,8 @@ local function deleteCommands()
   vim.api.nvim_del_user_command 'AsciiDocPreviewStop'
 end
 
+M.setup = config.setup
+
 function M.startServer()
   createAutocmds()
   createCommands()
@@ -74,7 +75,7 @@ function M.sendFileToServer()
 end
 
 function M.notifyServer()
-  if config.notifyType == 'content' then
+  if config.options.notify.type == 'content' then
     server.sendContentNotify()
   else
     server.sendPageNotify()
