@@ -23,10 +23,11 @@ Therefore, many things are not solved optimally and partly implemented twice (pl
 
 ## Requirements
 
-- Node.js
 - Neovim >= 0.8
+- Node.js with `node` and `npm` command
+- `curl` command
 - (optional) Asciidoctor
-  - asciidoctor command with asciidoctor-diagram
+  - `asciidoctor` command with `asciidoctor-diagram`
 
 ## Installation
 
