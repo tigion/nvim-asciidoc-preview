@@ -3,7 +3,7 @@
 A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 
 > **Warning**
-> The plugin is in an early stage. Use at your own risk.
+> The plugin is ~~in an early stage~~ not fully tested. Use at your own risk.
 
 <img width="1000" alt="Screenshot" src="https://user-images.githubusercontent.com/31811/214418871-14477f16-fe26-4b08-b864-77113997d321.png">
 
@@ -42,8 +42,9 @@ use 'tigion/nvim-asciidoc-preview'
 
 ## Usage
 
-- `:AsciiDocPreviewStart` ... starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard browser
-- `:AsciiDocPreviewStop` ... stops the AsciiDoc preview server
-
-- `:AsciiDocPreviewOpen` ... (if needed) opens the current AsciiDoc file in the standard browser
-- `:AsciiDocPreviewNotify` ... (if needed) notifies server about an update on the current AsciiDoc file
+| Command | Description |
+|---|---|
+| `:AsciiDocPreviewStart`  | Starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard web browser |
+| `:AsciiDocPreviewStop`   | Stops the AsciiDoc preview server |
+| `:AsciiDocPreviewOpen`   | (if needed) Opens the current AsciiDoc file in the standard web browser |
+| `:AsciiDocPreviewNotify` | (if needed) Notifies server about an update on the last saved AsciiDoc file |
