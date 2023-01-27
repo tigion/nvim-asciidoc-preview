@@ -81,8 +81,9 @@ end
 function M.stop() execCommand(command.postStop) end
 
 -- send file to server
-function M.sendFile(file)
-  local json = '\'{ "file": "' .. file .. '" }\''
+function M.sendFile(path, position)
+  position = position or 0
+  local json = '\'{ "file": { "path": "' .. path .. '", "position": ' .. position .. ' } }\''
   local cmd = command.putFile .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   execCommand(cmd)
 end

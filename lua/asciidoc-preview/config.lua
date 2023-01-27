@@ -4,10 +4,30 @@ local M = {}
 
 local defaults = {
   asciidoc = {
-    converter = 'js', -- 'js' or 'cmd'
+    --[[
+    converter to be used
+    - js: (default) Asciidoctor.js (no local installation needed)
+    - cmd: Asciidoctor command (local installation needed)
+    --]]
+    converter = 'js', -- js/cmd
   },
   notify = {
-    type = 'page', -- 'page' or 'content'
+    --[[
+    web page refresh type
+    - page:    (default) entire web page
+    - content: (not yet implemented) body content
+    --]]
+    type = 'page', -- page/content
+  },
+  preview = {
+    --[[
+    preview scroll (start) position after refresh
+    - top:  always start from the top
+    - last: (default) keep current scroll position if possible
+    - sync: (experimental) use realtive position in percent to current Neovim line
+            => inaccurate, because very content dependent 
+    --]]
+    scroll = 'last', -- top/last/sync
   },
 }
 
@@ -26,6 +46,7 @@ function M.setup(options)
   M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
 
   -- check options
+  --if (M.options.asciidoc.converter = 'js'
   M.options.notify.type = 'page' -- force 'page', TODO: 'content' not yet implemented
 
   -- TODO: things needed for the setup
