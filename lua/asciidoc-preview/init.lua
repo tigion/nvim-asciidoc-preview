@@ -84,7 +84,7 @@ end
 
 function M.openBrowser()
   local openCmd = helper.getOpenCmd()
-  if openCmd ~= '' then io.popen(openCmd .. ' http://localhost:11235/') end
+  if openCmd ~= '' then io.popen(openCmd .. ' ' .. config.server.url) end
 end
 
 return M
