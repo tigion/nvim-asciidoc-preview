@@ -12,7 +12,6 @@ exports.getServer = (req, res) => {
     'uptime': Math.floor(process.uptime()),
     'pid': process.pid,
     'arch': process.arch,
-    'file': data.asciidoc.file,
     'clients': data.clients.length,
   })
 }
@@ -21,36 +20,42 @@ exports.getServer = (req, res) => {
 exports.getFile = (req, res) => {
   console.log('API: Sending json file')
   res.json({
-    'file': data.asciidoc.file,
+    'file': { 
+      'path': data.file.path,
+      'position': data.file.position,
+    }
   })
 }
 
 // receive file
 exports.setFile = (req, res) => {
   // get received data
-  const newFile = req.body.file
+  const newFileName = req.body.file.path
+  const newFilePos = req.body.file.position
+  console.log('DEBUG: ' + newFileName + ' - ' + newFilePos)
 
   // handle received file
-  if (helper.isValidFile(newFile, data.asciidoc.extensions)) {
-    console.log(`API: Receiving valid file '${newFile}'`)
+  if (helper.isValidFile(newFileName, data.asciidoc.extensions)) {
+    console.log(`API: Receiving valid file '${newFileName}'`)
 
     // set update or create state
-    if (data.asciidoc.file) {
+    if (data.file.path) {
       res.status(204) // No Content (200, 204)
     } else {
       res.status(201) // Created (201)
     }
 
-    // set only if it is a new file
-    if (newFile != data.asciidoc.file) {
-      data.asciidoc.file = newFile
+    // set only if it is a new file or position
+    if (newFileName != data.file.path || newFilePos != data.file.position) {
+      data.file.path = newFileName
+      data.file.position = newFilePos
       exports.notifyClientsToUpdate()
     }
 
     //res.send('Valid file')
     res.end();
   } else {
-    console.log(`API: Receiving not valid file '${newFile}'`)
+    console.log(`API: Receiving not valid file '${newFileName}'`)
     res.status(400) // Bad Request
     //res.send('No valid file')
     res.end();
@@ -101,7 +106,7 @@ exports.notify = (req, res) => {
 // receive action: stop server
 exports.stop = (req, res) => {
   console.log('API: Receiving server stop')
-  data.asciidoc.file = 'stop'
+  data.file.path = 'stop'
   exports.notifyClientsToClose()
   res.status(204) // No Content
   res.end()
@@ -111,11 +116,11 @@ exports.stop = (req, res) => {
 // send update notify to all clients
 exports.notifyClientsToUpdate = () => {
   console.log('Server: Notify all clients to update')
-  data.clients.forEach(client => client.response.write('data: update\n\n'))
+  data.clients.forEach(client => client.response.write(`data: ${data.file.position}\n\n`))
 }
 
 // send close notify to all clients
 exports.notifyClientsToClose = () => {
   console.log('Server: Notify all clients to close')
-  data.clients.forEach(client => client.response.end('data: update\n\n'))
+  data.clients.forEach(client => client.response.end('data: close\n\n'))
 }

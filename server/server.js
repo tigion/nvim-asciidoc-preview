@@ -3,6 +3,7 @@
 // express module
 const express = require('express')
 const app = express()
+app.use(express.static('public'))
 app.use(express.json())
 
 // modules
@@ -23,7 +24,7 @@ for (let i = 2; i < process.argv.length; i++) {
       if (i == process.argv.length) continue
       const file = process.argv[i]
       if (helper.isValidFile(file, data.asciidoc.extensions)) {
-        data.asciidoc.file = file
+        data.file.path = file
       }
       break
     // set config
@@ -57,7 +58,7 @@ data.server.on('listening', () => {
     if (openCmd != '') {
       console.log('Server: Open browser')
       const { spawn, exec } = require("child_process");
-      var args = ['http://localhost:11235/']
+      var args = [`http://${data.config.hostname}:${data.config.port}`]
       spawn(openCmd, args, { detached: true, })
       //exec(openCmd + ' ' + args[0], (error, stdout, stderr) => {});
     } else {
@@ -73,7 +74,7 @@ data.server.on('close', () => {
 
 process.on('SIGINT', () => {
   console.log('Server: Receiving SIGINT')
-  data.asciidoc.file = 'stop'
+  data.file.path = 'stop'
   apiController.notifyClientsToClose()
   helper.waitToClose(data.server)
 })

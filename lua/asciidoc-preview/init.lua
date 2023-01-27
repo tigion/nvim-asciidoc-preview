@@ -22,7 +22,7 @@ local function createAutocmds()
 
   -- :h BufEnter
   -- :h BufWritePost
-  -- :h TextChangedI (laggy and needs to send the buffer content)
+  -- :h TextChangedI (TODO: laggy and needs to send the buffer content)
   autocmd({ 'BufWritePost' }, {
     pattern = { '*.asc', '*.adoc', '*.asciidoc' },
     --buffer = 0, -- 0 = current buffer number
@@ -51,6 +51,7 @@ local function deleteCommands()
   vim.api.nvim_del_user_command 'AsciiDocPreviewStop'
 end
 
+-- setup
 M.setup = config.setup
 
 function M.startServer()
@@ -70,8 +71,15 @@ function M.stopServer()
 end
 
 function M.sendFileToServer()
-  local file = vim.fn.expand '%:p'
-  server.sendFile(file)
+  local path = vim.fn.expand '%:p'
+  if config.options.preview.scroll == 'top' then
+    server.sendFile(path, 0) -- scroll type top
+  elseif config.options.preview.scroll == 'sync' then
+    local pos = helper.getCurrentLinePositionInPercent()
+    server.sendFile(path, pos) -- scroll type sync
+  else
+    server.sendFile(path, -1) -- scroll type: last
+  end
 end
 
 function M.notifyServer()

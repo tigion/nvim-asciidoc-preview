@@ -9,7 +9,10 @@ const data = {
   asciidoc: {
     extensions: ['asc', 'adoc', 'asciidoc'],
     converter: 'js', // 'js' or 'cmd'
-    file: '',
+  },
+  file: {
+    path: '',
+    position: 0,
   },
   server: null,
   clients: [],

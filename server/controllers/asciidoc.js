@@ -1,5 +1,8 @@
 // controller/asciidoc.js
 
+// set reload script
+const reloadScript = '<script src="script.js"></script>'
+
 // convert AsciiDoc to HTML
 function convertAsciidocToHtml(processor, file) {
   switch (processor) {
@@ -26,7 +29,7 @@ function convertWithAsciidoctorJs(file) {
     var self = this
     self.atLocation('head')
     self.process(function() {
-      return '<script>var es = new EventSource("/api/actions/subscribe"); es.onmessage = (e) => { window.location.reload() };</script>'
+      return reloadScript
     })
   })
 
@@ -60,11 +63,10 @@ function convertWithAsciidoctorCmd(file) {
   // convert mit Asciidoctor command
   const childProcess = require('child_process')
   const stdout = childProcess.execSync(cmd)
-  
+
   // add script for client registration and refresh event
   // (not perfect, but it works)
-  var script = '<script>var es = new EventSource("/api/subscribe"); es.onmessage = (e) => { window.location.reload() };</script>'
-  return stdout.toString() + script
+  return stdout.toString() + reloadScript
 }
 
 // module exports
