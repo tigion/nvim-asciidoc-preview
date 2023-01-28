@@ -14,7 +14,7 @@ Therefore, many things are not solved optimally and partly implemented twice (pl
 
 ## Features
 
-- once started with `:AsciiDocPreviewStart`, a preview of the current AsciiDoc file is shown in the web browser
+- once started with `:AsciiDocPreview`, a preview of the current AsciiDoc file is shown in the web browser
 - the preview is updated every time the AsciiDoc file is saved
 - when exiting Neovim or using the `:AsciiDocPreviewStop` command, the preview server is terminated in the background
 - the generation of the HTML preview is done either with:
@@ -45,7 +45,7 @@ use 'tigion/nvim-asciidoc-preview'
 
 | Command | Description |
 |---|---|
-| `:AsciiDocPreviewStart`  | Starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard web browser |
+| `:AsciiDocPreview`       | Starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard web browser |
 | `:AsciiDocPreviewStop`   | Stops the AsciiDoc preview server |
 | `:AsciiDocPreviewOpen`   | (if needed) Opens the current AsciiDoc file in the standard web browser |
 | `:AsciiDocPreviewNotify` | (if needed) Notifies server about an update on the last saved AsciiDoc file |
