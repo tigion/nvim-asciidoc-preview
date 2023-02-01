@@ -54,11 +54,11 @@ data.server = app.listen(data.config.port, data.config.hostname, () => {
 data.server.on('listening', () => {
   //console.log('Server: Listening...')
   if (data.config.openBrowser) {
-    var openCmd = helper.getOpenCmd()
+    const openCmd = helper.getOpenCmd()
     if (openCmd != '') {
       console.log('Server: Open browser')
       const { spawn, exec } = require("child_process");
-      var args = [`http://${data.config.hostname}:${data.config.port}`]
+      const args = [`http://${data.config.hostname}:${data.config.port}`]
       spawn(openCmd, args, { detached: true, })
       //exec(openCmd + ' ' + args[0], (error, stdout, stderr) => {});
     } else {

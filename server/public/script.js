@@ -1,12 +1,12 @@
 // subscribe on server
-var es = new EventSource("/api/actions/subscribe")
+const es = new EventSource("/api/actions/subscribe")
 
 // receive server event for page reload
 es.onmessage = (e) => {
   // check if is server close message
   if (e.data == "close") window.location.reload()
   // get url parameters
-  let params = (new URL(window.location)).searchParams
+  const params = (new URL(window.location)).searchParams
   // get scroll position
   let pos = parseInt(e.data)
   // check scroll type
@@ -39,8 +39,8 @@ addEventListener("load", (e) => {
   if (isPercent) {
     // limit to max 100 %
     pos = (pos > 100) ? 100 : pos
-    let documentHeight = document.documentElement.scrollHeight
-    let windowHeight = window.innerHeight
+    const documentHeight = document.documentElement.scrollHeight
+    const windowHeight = window.innerHeight
     // calc relative scroll position to document height
     pos = Math.round((documentHeight * pos / 100.0) - (windowHeight / 2))
   }

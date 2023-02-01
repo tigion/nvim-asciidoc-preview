@@ -26,7 +26,7 @@ function convertWithAsciidoctorJs(file) {
 
   // add script for client registration and refresh event
   registry.docinfoProcessor(function() {
-    var self = this
+    const self = this
     self.atLocation('head')
     self.process(function() {
       return reloadScript
@@ -55,9 +55,9 @@ function convertWithAsciidoctorCmd(file) {
   //        - data-uri ... embedd images as base64
   // -e ... for embedded documents
   // -o ... output target (`-` stdout)
-  var attributes= '-a toc=auto -a data-uri'
-  var resources = '-r asciidoctor-diagram'
-  var cmd = 'asciidoctor'
+  const attributes= '-a toc=auto -a data-uri'
+  const resources = '-r asciidoctor-diagram'
+  const cmd = 'asciidoctor'
   cmd = `${cmd} ${resources} ${attributes} -o - "${file}"`
 
   // convert mit Asciidoctor command

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
-      var es = new EventSource("/api/actions/subscribe")
+      const es = new EventSource("/api/actions/subscribe")
       es.onmessage = (e) => { window.location.reload() }
     </script>
   </head>
