@@ -25,7 +25,7 @@ local defaults = {
     - top:  always start from the top
     - last: (default) keep current scroll position if possible
     - sync: (experimental) use realtive position in percent to current Neovim line
-            => inaccurate, because very content dependent 
+            => inaccurate, because very content dependent
     --]]
     scroll = 'last', -- top/last/sync
   },

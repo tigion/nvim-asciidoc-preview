@@ -24,6 +24,6 @@ autocmd('BufEnter', {
   group = vim.g.tigion_asciidocPreview_augroupName,
   callback = function()
     -- create user commands (if needed)
-    vim.api.nvim_create_user_command('AsciiDocPreview', require('asciidoc-preview').startServer, {})
+    vim.api.nvim_create_user_command('AsciiDocPreview', require 'asciidoc-preview'.startServer, {})
   end,
 })

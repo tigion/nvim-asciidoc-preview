@@ -17,7 +17,7 @@ local function createAutocmds()
 
   autocmd('VimLeavePre', {
     group = myAugroup,
-    callback = function() require('asciidoc-preview').stopServer() end,
+    callback = function() require 'asciidoc-preview'.stopServer() end,
   })
 
   -- :h BufEnter
@@ -28,20 +28,22 @@ local function createAutocmds()
     --buffer = 0, -- 0 = current buffer number
     group = myAugroup,
     callback = function()
-      require('asciidoc-preview').sendFileToServer()
-      require('asciidoc-preview').notifyServer()
+      require 'asciidoc-preview'.sendFileToServer()
+      require 'asciidoc-preview'.notifyServer()
     end,
   })
 end
 
 -- clear auto commands
-local function clearAutocmds() vim.api.nvim_clear_autocmds { group = vim.g.tigion_asciidocPreview_augroupName } end
+local function clearAutocmds()
+  vim.api.nvim_clear_autocmds { group = vim.g.tigion_asciidocPreview_augroupName }
+end
 
 -- create user commands
 local function createCommands()
-  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require('asciidoc-preview').notifyServer, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require('asciidoc-preview').openBrowser, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require('asciidoc-preview').stopServer, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require 'asciidoc-preview'.notifyServer, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require 'asciidoc-preview'.openBrowser, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require 'asciidoc-preview'.stopServer, {})
 end
 
 -- delete user commands
