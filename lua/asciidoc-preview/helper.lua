@@ -27,7 +27,11 @@ function M.getOpenCmd()
     return 'open'
     --return 'open -a Safari'
   elseif os == 'Linux' then
-    return 'xdg-open'
+    if vim.fn.has('wsl') == 1 then
+      return 'wslview'
+    else
+      return 'xdg-open'
+    end
   end
 
   -- FreeBSD, OpenBSD, Windows, ...
