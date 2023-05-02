@@ -3,7 +3,7 @@
 A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 
 > **Warning**
-> The plugin is ~~in an early stage~~ not fully tested. Use at your own risk.
+> The plugin is ~~in an early stage~~ not fully tested. Use at your own risk. Linux/macOS ✅ and Windows ❓.
 
 <img width="1000" alt="Screenshot" src="https://user-images.githubusercontent.com/31811/214418871-14477f16-fe26-4b08-b864-77113997d321.png">
 
