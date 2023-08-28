@@ -31,7 +31,26 @@ Therefore, many things are not solved optimally and partly implemented twice (pl
 
 ## Installation
 
-### [packer](https://github.com/wbthomason/packer.nvim)
+### [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+{
+  'tigion/nvim-asciidoc-preview',
+  ft = { 'asciidoc' },
+  -- opts = {},
+}
+```
+
+_plugins/asciidoc_preview.lua_:
+```lua
+return {
+  'tigion/nvim-asciidoc-preview',
+  ft = { 'asciidoc' },
+  -- opts = {},
+}
+```
+
+### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use 'tigion/nvim-asciidoc-preview'
