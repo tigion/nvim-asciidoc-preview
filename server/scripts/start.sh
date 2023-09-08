@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # go to parent directory
 if ! cd "$(dirname "$0")/.."; then exit; fi
