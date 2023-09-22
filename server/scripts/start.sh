@@ -22,6 +22,7 @@ if isCommand npm; then
     npm install > logs/setup.log 2>&1
   else
     # update server dependencies
+    # TODO: a better solution is on plugin update only
     update_count=$(npm outdated -p | awk -F ':' '{if ($2 != $3) {print $3}}' | wc -l)
     if [[ $update_count -gt 0 ]]; then
       npm update >> logs/update.log 2>&1
