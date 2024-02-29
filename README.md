@@ -2,7 +2,7 @@
 
 A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 
-> **Warning**
+> [!WARNING]
 > The plugin is ~~in an early stage~~ not fully tested. Use at your own risk. Linux/macOS ✅ and Windows ❓.
 
 <img width="1000" alt="Screenshot" src="https://user-images.githubusercontent.com/31811/214418871-14477f16-fe26-4b08-b864-77113997d321.png">
@@ -10,7 +10,7 @@ A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 The plugin started as a playground for learning Neovim plugin programming with Lua and a server component with Node.js.
 Therefore, many things are not solved optimally and partly implemented twice (plugin and server). Helpful tips are welcome.
 
-> **Note** More instructions and information will follow soon.
+More instructions and information will follow soon.
 
 ## Features
 
