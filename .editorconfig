@@ -3,7 +3,7 @@
 # top-most EditorConfig file
 root = true
 
-# default
+# All files
 [*]
 charset = utf-8
 end_of_line = lf
@@ -13,19 +13,20 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 # lua
-# see https://github.com/CppCXY/EmmyLuaCodeStyle
+# - more in .stylua.toml for StyLua
 [*.lua]
 indent_size = 2
 indent_style = space
-# none/single/double
-quote_style = single
-end_of_line = lf,
-# keep/never/always/smart
-trailing_table_separator = smart
-# keep/remove/remove_table_only/remove_string_only
-call_arg_parentheses = remove
-keep_one_space_between_table_and_bracket = true
-max_line_length = 120
+# lua_ls
+# # none/single/double
+# quote_style = single
+# end_of_line = lf,
+# # keep/never/always/smart
+# trailing_table_separator = smart
+# # keep/remove/remove_table_only/remove_string_only
+# call_arg_parentheses = remove
+# keep_one_space_between_table_and_bracket = true
+# max_line_length = 120
 
 [Makefile]
 indent_style = tab

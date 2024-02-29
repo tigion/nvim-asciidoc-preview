@@ -8,7 +8,9 @@ local M = {}
 function M.getPluginPath()
   -- variante 1: global editor variable
   local path = vim.g.tigion_asciidocPreview_rootDir
-  if path then return path end
+  if path then
+    return path
+  end
 
   -- variante 2: debug library
   --print(vim.fn.stdpath('data'))

@@ -12,7 +12,7 @@ TODO: execute command with:
 ]]
 --
 
-local config = require 'asciidoc-preview.config'
+local config = require('asciidoc-preview.config')
 
 local M = {}
 
@@ -41,7 +41,7 @@ local function execCommand(cmd, serverMustRun)
   serverMustRun = serverMustRun or true
   if M.isRunning() == serverMustRun then
     io.popen(cmd)
-    --os.execute(cmd)
+    -- os.execute(cmd)
   end
 end
 
@@ -49,7 +49,7 @@ end
 function M.isRunning()
   local handle = io.popen(command.getHi)
   if handle then
-    local read = handle:read '*a'
+    local read = handle:read('*a')
     if read and read ~= '' and vim.json.decode(read).hi == config.server.hi then
       return true
     else
@@ -63,6 +63,7 @@ end
 function M.start()
   --execCommand(command.start, false)
   if not M.isRunning() then
+    print('AsciiDocPreview: Starting ...')
     os.execute(command.start) -- start server
     vim.wait(5000, M.isRunning) -- give server some time to start
 
@@ -78,20 +79,26 @@ function M.start()
 end
 
 -- stop server
-function M.stop() execCommand(command.postStop) end
+function M.stop()
+  execCommand(command.postStop)
+end
 
 -- send file to server
 function M.sendFile(path, position)
   position = position or 0
-  local json = '\'{ "file": { "path": "' .. path .. '", "position": ' .. position .. ' } }\''
+  local json = '\'{ "file": { "path": "' .. path .. '", "position": ' .. position .. " } }'"
   local cmd = command.putFile .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   execCommand(cmd)
 end
 
 -- send notify to server (page)
-function M.sendPageNotify() execCommand(command.postNotifyPage) end
+function M.sendPageNotify()
+  execCommand(command.postNotifyPage)
+end
 
 -- send notify to server (content)
-function M.sendContentNotify() execCommand(command.postNotifyContent) end
+function M.sendContentNotify()
+  execCommand(command.postNotifyContent)
+end
 
 return M

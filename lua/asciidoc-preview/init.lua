@@ -2,9 +2,9 @@
 
 -- extra plugin.lua needed?
 
-local server = require 'asciidoc-preview.server'
-local helper = require 'asciidoc-preview.helper'
-local config = require 'asciidoc-preview.config'
+local server = require('asciidoc-preview.server')
+local helper = require('asciidoc-preview.helper')
+local config = require('asciidoc-preview.config')
 
 local M = {}
 
@@ -17,7 +17,9 @@ local function createAutocmds()
 
   autocmd('VimLeavePre', {
     group = myAugroup,
-    callback = function() require 'asciidoc-preview'.stopServer() end,
+    callback = function()
+      require('asciidoc-preview').stopServer()
+    end,
   })
 
   -- :h BufEnter
@@ -28,29 +30,29 @@ local function createAutocmds()
     --buffer = 0, -- 0 = current buffer number
     group = myAugroup,
     callback = function()
-      require 'asciidoc-preview'.sendFileToServer()
-      require 'asciidoc-preview'.notifyServer()
+      require('asciidoc-preview').sendFileToServer()
+      require('asciidoc-preview').notifyServer()
     end,
   })
 end
 
 -- clear auto commands
 local function clearAutocmds()
-  vim.api.nvim_clear_autocmds { group = vim.g.tigion_asciidocPreview_augroupName }
+  vim.api.nvim_clear_autocmds({ group = vim.g.tigion_asciidocPreview_augroupName })
 end
 
 -- create user commands
 local function createCommands()
-  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require 'asciidoc-preview'.notifyServer, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require 'asciidoc-preview'.openBrowser, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require 'asciidoc-preview'.stopServer, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require('asciidoc-preview').notifyServer, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require('asciidoc-preview').openBrowser, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require('asciidoc-preview').stopServer, {})
 end
 
 -- delete user commands
 local function deleteCommands()
-  vim.api.nvim_del_user_command 'AsciiDocPreviewNotify'
-  vim.api.nvim_del_user_command 'AsciiDocPreviewOpen'
-  vim.api.nvim_del_user_command 'AsciiDocPreviewStop'
+  vim.api.nvim_del_user_command('AsciiDocPreviewNotify')
+  vim.api.nvim_del_user_command('AsciiDocPreviewOpen')
+  vim.api.nvim_del_user_command('AsciiDocPreviewStop')
 end
 
 -- setup
@@ -73,7 +75,7 @@ function M.stopServer()
 end
 
 function M.sendFileToServer()
-  local path = vim.fn.expand '%:p'
+  local path = vim.fn.expand('%:p')
   if config.options.preview.scroll == 'top' then
     server.sendFile(path, 0) -- scroll type top
   elseif config.options.preview.scroll == 'sync' then
@@ -94,7 +96,9 @@ end
 
 function M.openBrowser()
   local openCmd = helper.getOpenCmd()
-  if openCmd ~= '' then io.popen(openCmd .. ' ' .. config.server.url) end
+  if openCmd ~= '' then
+    io.popen(openCmd .. ' ' .. config.server.url)
+  end
 end
 
 return M
