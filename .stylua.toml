@@ -1,7 +1,10 @@
-# options (https://github.com/JohnnyMorganz/StyLua#options)
-indent-type = "Spaces" # prefer spaces as indent type
-indent-width = 2 # use 2 characters as indent
-quote-style = "AutoPreferSingle" # prefer single quote style
-column-width = 120 # (also relevant for `collapse-simple-statement`)
-call-parentheses = "None" # omits parentheses on single string or table
-collapse-simple-statement = "Always" # always collapse simple statements
+# column_width = 120
+# line_endings = "Unix"
+indent_type = "Spaces"
+indent_width = 2
+quote_style = "AutoPreferSingle"
+# call_parentheses = "Always"
+collapse_simple_statement = "Always"
+
+# [sort_requires]
+# enabled = false
