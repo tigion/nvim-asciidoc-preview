@@ -45,7 +45,7 @@ More instructions and information will follow soon.
   'tigion/nvim-asciidoc-preview',
   cmd = { 'AsciiDocPreview' },
   ft = { 'asciidoc' },
-  -- opts = {},
+  opts = {},
 }
 ```
 
@@ -56,7 +56,7 @@ return {
   'tigion/nvim-asciidoc-preview',
   cmd = { 'AsciiDocPreview' },
   ft = { 'asciidoc' },
-  -- opts = {},
+  opts = {},
 }
 ```
 
