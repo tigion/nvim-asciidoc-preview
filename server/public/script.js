@@ -15,7 +15,7 @@ es.onmessage = (e) => {
     pos = `${parseInt(window.scrollY)}px`;
   } else {
     // check and set scroll position in percent
-    pos = isNan(pos) || pos < 0 ? 0 : pos > 100 ? 100 : pos;
+    pos = isNaN(pos) || pos < 0 ? 0 : pos > 100 ? 100 : pos;
   }
   // set parameter 'scroll' for reload
   params.set("scroll", pos);

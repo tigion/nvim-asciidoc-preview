@@ -25,10 +25,10 @@ function convertWithAsciidoctorJs(file) {
   const registry = asciidoctor.Extensions.create();
 
   // add script for client registration and refresh event
-  registry.docinfoProcessor(function() {
+  registry.docinfoProcessor(function () {
     const self = this;
     self.atLocation("head");
-    self.process(function() {
+    self.process(function () {
       return reloadScript;
     });
   });
@@ -57,7 +57,7 @@ function convertWithAsciidoctorCmd(file) {
   // -o ... output target (`-` stdout)
   const attributes = "-a toc=auto -a data-uri";
   const resources = "-r asciidoctor-diagram";
-  const cmd = "asciidoctor";
+  let cmd = "asciidoctor";
   cmd = `${cmd} ${resources} ${attributes} -o - "${file}"`;
 
   // convert mit Asciidoctor command
