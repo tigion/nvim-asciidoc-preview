@@ -49,7 +49,7 @@ More instructions and information will follow soon.
 }
 ```
 
-_plugins/asciidoc_preview.lua_:
+_plugins/asciidoc-preview.lua_:
 
 ```lua
 return {

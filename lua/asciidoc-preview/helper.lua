@@ -41,7 +41,7 @@ function M.getOpenCmd()
   return ''
 end
 
--- calc current line position in percent
+-- calculate current line position in percent
 function M.getCurrentLinePositionInPercent()
   local maxLine = vim.api.nvim_buf_line_count(0)
   local currentLine = vim.api.nvim_win_get_cursor(0)[1]

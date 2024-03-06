@@ -23,8 +23,8 @@ local defaults = {
     --[[
     preview scroll (start) position after refresh
     - top:  always start from the top
-    - last: (default) keep current scroll position if possible
-    - sync: (experimental) use realtive position in percent to current Neovim line
+    - last: (default) keep last (current) scroll position if possible
+    - sync: (experimental) use relative position in percent to current Neovim line
             => inaccurate, because very content dependent
     --]]
     scroll = 'last', -- top/last/sync
@@ -34,7 +34,7 @@ local defaults = {
 local path = vim.g.tigion_asciidocPreview_rootDir
 local server = {
   start = path .. '/server/scripts/start.sh',
-  url = 'http://localhost:11235',
+  url = 'http://localhost:11235', -- TODO: make port configurable
   hi = 'Coffee please',
 }
 
@@ -46,10 +46,11 @@ function M.setup(options)
   M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
 
   -- check options
-  --if (M.options.asciidoc.converter = 'js'
-  M.options.notify.type = 'page' -- force 'page', TODO: 'content' not yet implemented
+  -- TODO: M.options.asciidoc.converter = 'js'
+  M.options.notify.type = 'page' -- NOTE: force 'page', because 'content' is not yet implemented
 
   -- TODO: things needed for the setup
+  -- - install with Lazy.nvim 'build' config (packer 'run')
   -- - Node.js server: npm install?
   -- - Autocmd?
 end
