@@ -63,7 +63,7 @@ end
 function M.start()
   --execCommand(command.start, false)
   if not M.isRunning() then
-    print('AsciiDocPreview: Starting ...')
+    -- print('AsciiDocPreview: Starting ...')
     os.execute(command.start) -- start server
     vim.wait(5000, M.isRunning) -- give server some time to start
 

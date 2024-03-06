@@ -41,13 +41,14 @@ local server = {
 M.options = {}
 M.server = server
 
-function M.setup(options)
+function M.setup(opts)
   -- merge defaults with user options
-  M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
+  M.options = vim.tbl_deep_extend('force', {}, defaults, opts or {})
 
   -- check options
-  -- TODO: M.options.asciidoc.converter = 'js'
-  M.options.notify.type = 'page' -- NOTE: force 'page', because 'content' is not yet implemented
+  M.options.asciidoc.converter = 'js' -- TODO: force 'js', because 'cmd' is not yet implemented
+  M.options.notify.type = 'page' -- TODO: force 'page', because 'content' is not yet implemented
+  M.options.preview.scroll = 'last' -- TODO: force 'last', because check is not yet implemented
 
   -- TODO: things needed for the setup
   -- - install with Lazy.nvim 'build' config (packer 'run')
@@ -55,6 +56,6 @@ function M.setup(options)
   -- - Autocmd?
 end
 
-M.setup()
+-- M.setup()
 
 return M

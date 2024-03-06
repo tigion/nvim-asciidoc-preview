@@ -57,6 +57,9 @@ end
 
 -- setup
 M.setup = config.setup
+-- M.setup = function(opts)
+--   config.setup(opts)
+-- end
 
 function M.startServer()
   createAutocmds()
