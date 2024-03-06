@@ -38,7 +38,7 @@ local server = {
   hi = 'Coffee please',
 }
 
-M.options = {}
+M.options = vim.deepcopy(defaults)
 M.server = server
 
 function M.setup(opts)
