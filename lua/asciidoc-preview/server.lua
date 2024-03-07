@@ -1,17 +1,3 @@
--- server.lua
-
---[[
-TODO: execute command with:
-- io.popen(...)
-  - can read command output
-    - local handle = io.popen(command)
-    - local read = handle:read("*a")
-- os.execute(...)
-- execute('! ...')
-- vim.api.nvim_command(...)
-]]
---
-
 local config = require('asciidoc-preview.config')
 
 local M = {}
@@ -37,6 +23,19 @@ local command = {
   postNotifyContent = 'curl -s -X POST ' .. apiURLs.actions.notify.content,
 }
 
+---Executes a command if the server is running.
+--
+-- NOTE: execute command with:
+-- - io.popen(...)
+--   - can read command output
+--     - local handle = io.popen(command)
+--     - local read = handle:read("*a")
+-- - os.execute(...)
+-- - execute('! ...')
+-- - vim.api.nvim_command(...)
+--
+---@param cmd string
+---@param serverMustRun? boolean
 local function execCommand(cmd, serverMustRun)
   serverMustRun = serverMustRun or true
   if M.isRunning() == serverMustRun then
@@ -45,12 +44,14 @@ local function execCommand(cmd, serverMustRun)
   end
 end
 
--- check if server is running and answers with the correct hi message
+---Checks if the server is running.
+---The correct server is validated with a simple Hi message.
+---@return boolean?
 function M.isRunning()
   local handle = io.popen(command.getHi)
   if handle then
     local read = handle:read('*a')
-    if read and read ~= '' and vim.json.decode(read).hi == config.server.hi then
+    if read and read ~= '' and vim.json.decode(read)['hi'] == config.server.hi then
       return true
     else
       return false
@@ -59,44 +60,48 @@ function M.isRunning()
   return nil
 end
 
--- start needed Node.ja server
+---Starts the server if not running.
 function M.start()
-  --execCommand(command.start, false)
+  -- execCommand(command.start, false)
   if not M.isRunning() then
     -- print('AsciiDocPreview: Starting ...')
     os.execute(command.start) -- start server
-    vim.wait(5000, M.isRunning) -- give server some time to start
+    vim.wait(5000, M.isRunning) -- Give server some time to start
 
-    -- with io.popen() nvim hangs sometimes
-    --[[local handle = io.popen(command.start)
-    if handle then
-      -- read first output line => server is started
-      local read = handle:read '*l'
-      --print(read)
-    end]]
+    -- NOTE: With `io.popen()` nvim hangs sometimes
     --
+    -- local handle = io.popen(command.start)
+    -- if handle then
+    --   -- read first output line => server is started
+    --   local read = handle:read '*l'
+    --   -- print(read)
+    -- end
   end
 end
 
--- stop server
+---Stops the server.
 function M.stop()
   execCommand(command.postStop)
 end
 
--- send file to server
-function M.sendFile(path, position)
-  position = position or 0
-  local json = '\'{ "file": { "path": "' .. path .. '", "position": ' .. position .. " } }'"
+---Sends the filepath and position to the server.
+---@param filepath string Filename with the full path
+---@param position? integer Scroll position for the preview
+function M.sendFile(filepath, position)
+  position = position or -1
+  local json = '\'{ "file": { "path": "' .. filepath .. '", "position": ' .. position .. " } }'"
   local cmd = command.putFile .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   execCommand(cmd)
 end
 
--- send notify to server (page)
+---Sends a notification to the server to initiate
+---a reload of the preview website.
 function M.sendPageNotify()
   execCommand(command.postNotifyPage)
 end
 
--- send notify to server (content)
+---Sends a notification to the server to initiate
+---a reload the content of the preview website.
 function M.sendContentNotify()
   execCommand(command.postNotifyContent)
 end

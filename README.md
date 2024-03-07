@@ -4,7 +4,9 @@ A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 
 > [!WARNING]
 > The plugin is ~~in an early stage~~ not fully tested.
-> Use at your own risk. Linux/macOS ✅ and Windows ❓.
+> Use at your own risk.
+>
+> Works on: ✅ Linux, ✅ macOS, but not yet on ❌ Windows (WSL❓)
 
 <img width="1000" alt="Screenshot" src="https://user-images.githubusercontent.com/31811/214418871-14477f16-fe26-4b08-b864-77113997d321.png">
 
@@ -12,8 +14,6 @@ The plugin started as a playground for learning Neovim plugin programming
 with Lua and a server component with Node.js.
 Therefore, many things are not solved optimally and partly implemented
 twice (plugin and server). Helpful tips are welcome.
-
-More instructions and information will follow soon.
 
 ## Features
 
@@ -45,36 +45,110 @@ More instructions and information will follow soon.
   'tigion/nvim-asciidoc-preview',
   cmd = { 'AsciiDocPreview' },
   ft = { 'asciidoc' },
-  opts = {},
-}
-```
-
-_plugins/asciidoc-preview.lua_:
-
-```lua
-return {
-  'tigion/nvim-asciidoc-preview',
-  cmd = { 'AsciiDocPreview' },
-  ft = { 'asciidoc' },
-  opts = {},
+  opts = {
+    -- Add user configuration here
+  },
 }
 ```
 
 ### [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
+<details>
+  <summary>Show instruction</summary>
+
 ```lua
-use 'tigion/nvim-asciidoc-preview'
+use({
+  'tigion/nvim-asciidoc-preview',
+  config = function()
+    require('asciidoc-preview').setup({
+      -- Add user configuration here
+    })
+  end,
+})
 ```
+
+</details>
 
 ## Configuration
 
-⏳ ... follows soon
+For [lazy.nvim](https://github.com/folke/lazy.nvim) use the `opts` or `config` property.
+
+```lua
+opts = {
+  server = {
+    converter = 'js'
+  },
+  preview = {
+    position = 'current',
+  },
+}
+```
+
+<details>
+  <summary>Variant with config</summary>
+
+```lua
+config = function()
+  require('asciidoc-preview').setup({
+    server = {
+      converter = 'js'
+    },
+    preview = {
+      position = 'current',
+    },
+  })
+end,
+```
+
+</details>
+
+For other plugin manager, call the setup function `require('asciidoc-preview').setup({ ... })` directly.
+
+### Default Options
+
+Currently available settings for the user:
+
+```lua
+{
+  -- Server options
+  server = {
+    -- Determines how the AsciiDoc file is converted to HTML for the preview.
+    -- `js`  - Asciidoctor.js (no local installation needed)
+    -- `cmd` - Asciidoctor command (local installation needed)
+    converter = 'js',
+  },
+  -- Preview options
+  preview = {
+    -- Determines the scroll position of the preview website.
+    -- `current` - Keep current scroll position
+    -- `start`   - Start of the website
+    -- `sync`    - (experimental) Same (similar) position as in Neovim
+    --             => inaccurate, because very content dependent
+    position = 'current',
+  },
+}
+```
 
 ## Usage
 
-| Command                  | Description                                                                                                      |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `:AsciiDocPreview`       | Starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard web browser |
-| `:AsciiDocPreviewStop`   | Stops the AsciiDoc preview server                                                                                |
-| `:AsciiDocPreviewOpen`   | (if needed) Opens the current AsciiDoc file in the standard web browser                                          |
-| `:AsciiDocPreviewNotify` | (if needed) Notifies server about an update on the last saved AsciiDoc file                                      |
+| Command                  | Description                                                                                                       |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `:AsciiDocPreview`       | Starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard web browser. |
+| `:AsciiDocPreviewStop`   | Stops the AsciiDoc preview server.                                                                                |
+| `:AsciiDocPreviewOpen`   | (if needed) (Re)Opens the current AsciiDoc file in the standard web browser.                                      |
+| `:AsciiDocPreviewNotify` | (if needed) Notifies server about an update on the last saved AsciiDoc file.                                      |
+
+A keymap suggestion:
+
+```lua
+vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', { desc = 'Preview AsciiDoc document' })
+```
+
+To use the same keymap for different file types and plugins (e.g. [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)), place it in `after/ftplugin/asciidoc.lua`.
+This way the keymap is only set for AsciiDoc files.
+
+```lua
+local opts = { buffer = true, silent = true }
+opts.desc = 'Preview AsciiDoc document'
+vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', opts)
+```
