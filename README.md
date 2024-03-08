@@ -46,6 +46,7 @@ twice (plugin and server). Helpful tips are welcome.
   'tigion/nvim-asciidoc-preview',
   cmd = { 'AsciiDocPreview' },
   ft = { 'asciidoc' },
+  build = 'cd server && npm install',
   opts = {
     -- Add user configuration here
   },
@@ -60,6 +61,7 @@ twice (plugin and server). Helpful tips are welcome.
 ```lua
 use({
   'tigion/nvim-asciidoc-preview',
+  run = 'cd server && npm install',
   config = function()
     require('asciidoc-preview').setup({
       -- Add user configuration here
