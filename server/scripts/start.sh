@@ -14,19 +14,19 @@ isCommand() {
 # create log directory
 mkdir -p logs
 
-# setup if needed
-# if isCommand npm && [[ ! -d "node_modules" ]]; then
+# Fallback, if no build/run command in Neovim plugin manager
 if isCommand npm; then
-  if [[ ! -d "node_modules" ]]; then
-    # install server dependencies
-    npm install
-  else
-    # update server dependencies
-    update_count=$(npm outdated -p | awk -F ':' '{if ($2 != $3) {print $3}}' | wc -l)
-    if [[ $update_count -gt 0 ]]; then
-      npm update
-    fi
-  fi
+  npm install
+  # if [[ ! -d "node_modules" ]]; then
+  #   # install server dependencies
+  #   npm install
+  # else
+  #   # update server dependencies
+  #   update_count=$(npm outdated -p | awk -F ':' '{if ($2 != $3) {print $3}}' | wc -l)
+  #   if [[ $update_count -gt 0 ]]; then
+  #     npm update
+  #   fi
+  # fi
 fi
 
 # start server
