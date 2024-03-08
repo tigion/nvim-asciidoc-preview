@@ -16,15 +16,15 @@ mkdir -p logs
 
 # Fallback, if no build/run command in Neovim plugin manager
 if isCommand npm; then
-  npm install
+  npm install >logs/setup.log 2>&1
   # if [[ ! -d "node_modules" ]]; then
   #   # install server dependencies
-  #   npm install
+  #   npm install >logs/setup.log 2>&1
   # else
   #   # update server dependencies
   #   update_count=$(npm outdated -p | awk -F ':' '{if ($2 != $3) {print $3}}' | wc -l)
   #   if [[ $update_count -gt 0 ]]; then
-  #     npm update
+  #     npm update >logs/setup.log 2>&1
   #   fi
   # fi
 fi
