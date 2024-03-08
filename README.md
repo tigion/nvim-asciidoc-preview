@@ -17,16 +17,17 @@ twice (plugin and server). Helpful tips are welcome.
 
 ## Features
 
-- once started with `:AsciiDocPreview`, a preview of the current AsciiDoc
-  file is shown in the web browser
-- the preview is updated every time the AsciiDoc file is saved
-- when exiting Neovim or using the `:AsciiDocPreviewStop` command,
-  the preview server is terminated in the background
-- the generation of the HTML preview is done either with:
+- Once started with `:AsciiDocPreview`, a preview of the current AsciiDoc
+  file is shown in the web browser.
+- The preview is updated every time the AsciiDoc file is saved.
+- When exiting Neovim or using the `:AsciiDocPreviewStop` command,
+  the preview server is terminated in the background.
+- The generation of the HTML preview is done either with:
   - [Asciidoctor.js](https://docs.asciidoctor.org/asciidoctor.js/latest/)
     (default, no local installed Asciidoctor needed)
-  - or the locally installed [Asciidoctor](https://docs.asciidoctor.org/asciidoctor/latest/)
-    tools
+  - Or the locally installed [Asciidoctor](https://docs.asciidoctor.org/asciidoctor/latest/)
+    tools (`asciidoctor` and `asciidoctor-diagram`).
+    The `asciidoctor` command must be available. ([Install instruction (de)](https://www.informatik.htw-dresden.de/~zirkelba/praktika/se/arbeiten-mit-git-und-asciidoc/installation-und-konfiguration/index.html#_variante_2_asciidoctor_lokal_installiert))
 
 ## Requirements
 
@@ -102,7 +103,8 @@ end,
 
 </details>
 
-For other plugin manager, call the setup function `require('asciidoc-preview').setup({ ... })` directly.
+For other plugin manager, call the setup function
+`require('asciidoc-preview').setup({ ... })` directly.
 
 ### Default Options
 
@@ -144,7 +146,8 @@ A keymap suggestion:
 vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', { desc = 'Preview AsciiDoc document' })
 ```
 
-To use the same keymap for different file types and plugins (e.g. [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)), place it in `after/ftplugin/asciidoc.lua`.
+To use the same keymap for different file types and plugins (e.g. [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)),
+place it in `after/ftplugin/asciidoc.lua`.
 This way the keymap is only set for AsciiDoc files.
 
 ```lua
