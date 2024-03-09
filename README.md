@@ -15,6 +15,13 @@ with Lua and a server component with Node.js.
 Therefore, many things are not solved optimally and partly implemented
 twice (plugin and server). Helpful tips are welcome.
 
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [FAQ](#faq)
+
 ## Features
 
 - Once started with `:AsciiDocPreview`, a preview of the current AsciiDoc
@@ -43,7 +50,9 @@ The plugin allows optionally using the local installed Asciidoctor tools.
 
 ## Installation
 
-### [lazy.nvim](https://github.com/folke/lazy.nvim)
+### [lazy.nvim]
+
+[lazy.nvim]: https://github.com/folke/lazy.nvim
 
 ```lua
 {
@@ -57,7 +66,9 @@ The plugin allows optionally using the local installed Asciidoctor tools.
 }
 ```
 
-### [packer.nvim](https://github.com/wbthomason/packer.nvim)
+### [packer.nvim]
+
+[packer.nvim]: https://github.com/wbthomason/packer.nvim
 
 <details>
   <summary>Show instruction</summary>
