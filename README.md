@@ -27,15 +27,19 @@ twice (plugin and server). Helpful tips are welcome.
     (default, no local installed Asciidoctor needed)
   - Or the locally installed [Asciidoctor](https://docs.asciidoctor.org/asciidoctor/latest/)
     tools (`asciidoctor` and `asciidoctor-diagram`).
-    The `asciidoctor` command must be available. ([Install instruction (de)](https://www.informatik.htw-dresden.de/~zirkelba/praktika/se/arbeiten-mit-git-und-asciidoc/installation-und-konfiguration/index.html#_variante_2_asciidoctor_lokal_installiert))
 
 ## Requirements
 
 - Neovim >= 0.8
 - Node.js with `node` and `npm` command
 - `curl` command
-- (optional) Asciidoctor
-  - `asciidoctor` command with `asciidoctor-diagram`
+
+The plugin allows optionally using the local installed Asciidoctor tools.
+
+- This requires the `asciidoctor` command with the `asciidoctor-diagram` extension.
+  - [Install instruction (de)]
+
+[Install instruction (de)]: https://www.informatik.htw-dresden.de/~zirkelba/praktika/se/arbeiten-mit-git-und-asciidoc/installation-und-konfiguration/index.html#_variante_2_asciidoctor_lokal_installiert
 
 ## Installation
 
