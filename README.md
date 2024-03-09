@@ -161,3 +161,14 @@ local opts = { buffer = true, silent = true }
 opts.desc = 'Preview AsciiDoc document'
 vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', opts)
 ```
+
+## FAQ
+
+### How do I report an issue?
+
+1. Open an AsciiDoc document in Neovim.
+2. Run the `:checkhealth asciidoc-preview` command.
+3. Open a new [Issue](https://github.com/tigion/nvim-asciidoc-preview/issues/new).
+4. Describe your problem and include:
+   - the `checkhealth` output
+   - the [Installation/Configuration](#installation) with the used package manager
