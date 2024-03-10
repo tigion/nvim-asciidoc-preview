@@ -1,34 +1,34 @@
 local M = {}
 
----Checks if the current OS is Windows.
----@return boolean
----@nodiscard
-function M.is_windows()
-  return package.config:sub(1, 1) == '\\'
-end
+-- ---Checks if the current OS is Windows.
+-- ---@return boolean
+-- ---@nodiscard
+-- function M.is_windows()
+--   return package.config:sub(1, 1) == '\\'
+-- end
 
----Returns a value if it is in a table of defaults.
----If not, the first value from the defaults is returned.
+---Returns a value if it is in a table of valid values.
+---If not, the given default or the first valid value is returned.
 ---@param value string The value to be validated
----@param defaults table A table with valid values for comparison
+---@param valid_values table A table with valid values for comparison
+---@param default? string The default value if the value is not in the table
 ---@return string value The validated value
 ---@nodiscard
-function M.validatedValue(value, defaults)
-  -- vim.tbl_contains(defaults, value)
-  for _, v in ipairs(defaults) do
+function M.validatedValue(value, valid_values, default)
+  -- NOTE: vim.tbl_contains(valid_values, value)
+  for _, v in pairs(valid_values) do
     v = string.lower(v)
     value = string.lower(value)
     if v == value then
       return value
     end
   end
-  value = string.lower(defaults[1] or '')
-  return value
+  return default or string.lower(valid_values[1] or '')
 end
 
 ---Returns the root directory of the plugin.
 ---
---- FIXME: Optimize it or find a better alternative
+--- FIX: Optimize it or find a better alternative
 ---
 ---@return any
 ---@nodiscard
