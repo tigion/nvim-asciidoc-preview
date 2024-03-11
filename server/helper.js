@@ -68,9 +68,10 @@ function isReadableFile(file) {
 }
 
 // delay the termination of the server
-function waitToClose(server) {
+function waitToClose(server, server_ws) {
   setTimeout(function () {
     server.close();
+    server_ws.close();
   }, 1000);
 }
 

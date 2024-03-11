@@ -97,9 +97,23 @@ data.server.on("close", () => {
 process.on("SIGINT", () => {
   console.log("Server: Receiving SIGINT");
   apiController.notifyClientsToClose();
-  helper.waitToClose(data.server);
+  helper.waitToClose(data.server, data.server_ws);
 });
 
 process.on("uncaughtException", (err, origin) => {
   console.log(`Caught exception: ${err}\n` + `Exception origin: ${origin}`);
+});
+
+const { WebSocketServer } = require("ws");
+data.server_ws = new WebSocketServer({ port: 443 });
+
+data.server_ws.on("connection", (ws) => {
+  console.log("Server WS: New client connected");
+  ws.send("Server WS: Connection established");
+  ws.onclose = () => {
+    console.log("Server WS: Client has disconnected");
+  };
+  ws.onerror = function () {
+    console.log("Server WS: WebSocket error");
+  };
 });

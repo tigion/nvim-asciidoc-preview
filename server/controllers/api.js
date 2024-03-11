@@ -73,13 +73,14 @@ exports.setPreview = (req, res) => {
     }
 
     // set only if it is a new file or position
-    if (
-      newFilepath != data.preview.filepath ||
-      newPosition != data.preview.position
-    ) {
-      data.preview.filepath = newFilepath;
-      data.preview.position = newPosition;
-      exports.notifyClientsToUpdate();
+    // if (newFilepath != data.file.path || newPosition != data.file.position) {
+    if (newPosition != data.file.position) {
+      data.file.position = newPosition;
+    }
+    data.file.position = -1;
+    if (newFilepath != data.file.path) {
+      data.file.path = newFilepath;
+      exports.notifyClientsToUpdate(true);
     }
 
     //res.send('Valid file')
@@ -139,15 +140,34 @@ exports.stop = (req, res) => {
   exports.notifyClientsToClose();
   res.status(204); // No Content
   res.end();
-  helper.waitToClose(data.server);
+  helper.waitToClose(data.server, data.server_ws);
 };
 
 // send update notify to all clients
-exports.notifyClientsToUpdate = () => {
+exports.notifyClientsToUpdate = (isNewFile = false) => {
   console.log("Server: Notify all clients to update");
-  data.clients.forEach((client) =>
-    client.response.write(`data: ${data.preview.position}\n\n`),
+  if (isNewFile) {
+    data.clients.forEach((client) =>
+      client.response.write(`data: ${data.file.position}\n\n`),
+    );
+    return;
+  }
+
+  const asciidoc = require("../controllers/asciidoc.js");
+  const html = asciidoc.convertAsciidocToHtml(
+    data.asciidoc.converter,
+    data.file.path,
   );
+  const pattern = /<body.*>(\n|.)*<\/body>/g;
+  const result = html.match(pattern);
+  const message = JSON.stringify({
+    position: data.file.position,
+    content: result,
+  });
+
+  data.server_ws.clients.forEach((client) => {
+    if (client.readyState === 1) client.send(message);
+  });
 };
 
 // send close notify to all clients

@@ -42,6 +42,8 @@ const preview = {
 
 // The instance of the `http.Server` server
 let server = null;
+// The instance of the `WebSocketServer` server
+let server_ws = null;
 // The registered clients
 const clients = [];
 
@@ -49,5 +51,6 @@ module.exports = {
   config,
   preview,
   server,
+  server_ws,
   clients,
 };

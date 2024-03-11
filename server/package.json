@@ -11,6 +11,7 @@
   "dependencies": {
     "asciidoctor": "3.0.4",
     "asciidoctor-kroki": "0.18.1",
-    "express": "4.18.3"
+    "express": "4.18.3",
+    "ws": "^8.16.0"
   }
 }
