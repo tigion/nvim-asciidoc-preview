@@ -8,14 +8,17 @@ const data = require("../data.js");
 const asciidoc = require("../controllers/asciidoc.js");
 
 // send page templates or AsciiDoc preview to clients
-exports.page = (req, res) => {
-  if (data.file.path === "stop") {
+exports.page = (_req, res) => {
+  if (data.preview.isFinished) {
     // send server has stopped HTML template
     res.sendFile(path.join(__dirname, "../templates/stop.html"));
-  } else if (data.file.path) {
+  } else if (data.preview.filepath) {
     // send AsciiDoc file converted to HTML
     res.send(
-      asciidoc.convertAsciidocToHtml(data.asciidoc.converter, data.file.path)
+      asciidoc.convertAsciidocToHtml(
+        data.config.asciidoc.converter,
+        data.preview.filepath,
+      ),
     );
   } else {
     // send server has started HTML template

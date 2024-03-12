@@ -3,15 +3,6 @@
 // fs module
 const fs = require("fs");
 
-// module exports
-module.exports = {
-  isValidFile,
-  isFileExtension,
-  isReadableFile,
-  waitToClose,
-  getOpenCmd,
-};
-
 // check if file is valid
 function isValidFile(file, extensions) {
   if (isReadableFile(file) && isFileExtension(file, extensions)) {
@@ -39,7 +30,7 @@ function isReadableFile(file) {
 
 // delay the termination of the server
 function waitToClose(server) {
-  setTimeout(function() {
+  setTimeout(function () {
     server.close();
   }, 1000);
 }
@@ -58,3 +49,12 @@ function getOpenCmd() {
       return "";
   }
 }
+
+// module exports
+module.exports = {
+  isValidFile,
+  isFileExtension,
+  isReadableFile,
+  waitToClose,
+  getOpenCmd,
+};

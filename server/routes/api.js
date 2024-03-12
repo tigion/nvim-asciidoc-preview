@@ -36,5 +36,5 @@ router.post("/actions/notify", apiController.notify);
 // stop server
 router.post("/actions/stop", apiController.stop);
 
-// modul export
+// module export
 module.exports = router;

@@ -21,8 +21,8 @@ exports.getFile = (req, res) => {
   console.log("API: Sending json file");
   res.json({
     file: {
-      path: data.file.path,
-      position: data.file.position,
+      path: data.preview.filepath,
+      position: data.preview.position,
     },
   });
 };
@@ -35,20 +35,23 @@ exports.setFile = (req, res) => {
   console.log("DEBUG: " + newFileName + " - " + newFilePos);
 
   // handle received file
-  if (helper.isValidFile(newFileName, data.asciidoc.extensions)) {
+  if (helper.isValidFile(newFileName, data.config.asciidoc.extensions)) {
     console.log(`API: Receiving valid file '${newFileName}'`);
 
     // set update or create state
-    if (data.file.path) {
+    if (data.preview.filepath) {
       res.status(204); // No Content (200, 204)
     } else {
       res.status(201); // Created (201)
     }
 
     // set only if it is a new file or position
-    if (newFileName != data.file.path || newFilePos != data.file.position) {
-      data.file.path = newFileName;
-      data.file.position = newFilePos;
+    if (
+      newFileName != data.preview.filepath ||
+      newFilePos != data.preview.position
+    ) {
+      data.preview.filepath = newFileName;
+      data.preview.position = newFilePos;
       exports.notifyClientsToUpdate();
     }
 
@@ -106,7 +109,6 @@ exports.notify = (req, res) => {
 // receive action: stop server
 exports.stop = (req, res) => {
   console.log("API: Receiving server stop");
-  data.file.path = "stop";
   exports.notifyClientsToClose();
   res.status(204); // No Content
   res.end();
@@ -117,12 +119,13 @@ exports.stop = (req, res) => {
 exports.notifyClientsToUpdate = () => {
   console.log("Server: Notify all clients to update");
   data.clients.forEach((client) =>
-    client.response.write(`data: ${data.file.position}\n\n`)
+    client.response.write(`data: ${data.preview.position}\n\n`),
   );
 };
 
 // send close notify to all clients
 exports.notifyClientsToClose = () => {
+  data.preview.isFinished = true;
   console.log("Server: Notify all clients to close");
   data.clients.forEach((client) => client.response.end("data: close\n\n"));
 };

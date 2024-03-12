@@ -19,14 +19,15 @@ const helper = require("./helper");
 for (let i = 2; i < process.argv.length; i++) {
   switch (process.argv[i]) {
     // set Asciidoc file
-    case "--file":
+    case "--file": {
       i++;
       if (i == process.argv.length) continue;
       const file = process.argv[i];
-      if (helper.isValidFile(file, data.asciidoc.extensions)) {
-        data.file.path = file;
+      if (helper.isValidFile(file, data.config.asciidoc.extensions)) {
+        data.preview.file.path = file;
       }
       break;
+    }
     // set config
     case "--open-browser":
       data.config.openBrowser = true;
@@ -41,16 +42,21 @@ app.use("/", indexRoute);
 app.use("/api", apiRoute);
 
 // route 404 (last route)
-app.use((req, res, next) => {
+app.use((_req, res, _next) => {
   res.status(404);
   res.send("Server Error<br />404: Page Not Found");
 });
 
-// start server
-data.server = app.listen(data.config.port, data.config.hostname, () => {
-  console.log(
-    `Server: Running at http://${data.config.hostname}:${data.config.port}/`
-  );
+// get server hostname and port from configuration
+const hostname = data.config.server.hostname;
+const port = data.config.server.port;
+
+// set server url
+const url = `http://${hostname}:${port}`;
+
+// start `http.Server` server
+data.server = app.listen(port, hostname, () => {
+  console.log(`Server: Running at http://${hostname}:${port}/`);
 });
 
 data.server.on("listening", () => {
@@ -59,13 +65,13 @@ data.server.on("listening", () => {
     const openCmd = helper.getOpenCmd();
     if (openCmd != "") {
       console.log("Server: Open browser");
-      const { spawn, exec } = require("child_process");
-      const args = [`http://${data.config.hostname}:${data.config.port}`];
+      const { spawn } = require("child_process");
+      const args = [url];
       spawn(openCmd, args, { detached: true });
       //exec(openCmd + ' ' + args[0], (error, stdout, stderr) => {});
     } else {
       console.log(
-        "Server: Open browser on '" + process.platform + "' not yet supported"
+        "Server: Open browser on '" + process.platform + "' not yet supported",
       );
     }
   }
@@ -78,7 +84,6 @@ data.server.on("close", () => {
 
 process.on("SIGINT", () => {
   console.log("Server: Receiving SIGINT");
-  data.file.path = "stop";
   apiController.notifyClientsToClose();
   helper.waitToClose(data.server);
 });
