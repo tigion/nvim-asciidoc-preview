@@ -3,6 +3,27 @@
 // fs module
 const fs = require("fs");
 
+// check if port is valid
+// TODO: Check if port is already in use or return a free port
+function isValidPort(port) {
+  if (port < 10000 && port > 65535) {
+    return false;
+  }
+  return true;
+}
+
+// check if converter is valid
+function isValidConverter(converter) {
+  if (converter === "js" || converter === "cmd") {
+    return true;
+  }
+  // const validConverters = ["js", "cmd"];
+  // if (validConverters.includes(converter)) {
+  //   return true;
+  // }
+  return false;
+}
+
 // check if file is valid
 function isValidFile(file, extensions) {
   if (isReadableFile(file) && isFileExtension(file, extensions)) {
@@ -52,6 +73,8 @@ function getOpenCmd() {
 
 // module exports
 module.exports = {
+  isValidPort,
+  isValidConverter,
   isValidFile,
   isFileExtension,
   isReadableFile,

@@ -16,8 +16,36 @@ exports.getServer = (req, res) => {
   });
 };
 
-// send file
-exports.getFile = (req, res) => {
+// send config options
+exports.getOptions = (req, res) => {
+  console.log("API: Sending json file");
+  res.json({
+    converter: data.config.asciidoc.converter,
+  });
+};
+
+// receive config options
+exports.setOptions = (req, res) => {
+  // get received data
+  const newConverter = req.body.options.converter;
+  console.log("DEBUG: " + newConverter);
+
+  // check the given newConverter
+  if (helper.isValidConverter(newConverter)) {
+    console.log(`API: Receiving valid converter '${newConverter}'`);
+    data.config.asciidoc.converter = newConverter;
+  } else {
+    console.log(`API: Receiving invalid converter '${newConverter}'`);
+    res.status(400);
+    res.end();
+  }
+
+  res.status(204);
+  res.end();
+};
+
+// send preview
+exports.getPreview = (req, res) => {
   console.log("API: Sending json file");
   res.json({
     file: {
@@ -27,16 +55,16 @@ exports.getFile = (req, res) => {
   });
 };
 
-// receive file
-exports.setFile = (req, res) => {
+// receive preview
+exports.setPreview = (req, res) => {
   // get received data
-  const newFileName = req.body.file.path;
-  const newFilePos = req.body.file.position;
-  console.log("DEBUG: " + newFileName + " - " + newFilePos);
+  const newFilepath = req.body.preview.filepath;
+  const newPosition = req.body.preview.position;
+  console.log("DEBUG: " + newFilepath + " - " + newPosition);
 
   // handle received file
-  if (helper.isValidFile(newFileName, data.config.asciidoc.extensions)) {
-    console.log(`API: Receiving valid file '${newFileName}'`);
+  if (helper.isValidFile(newFilepath, data.config.asciidoc.extensions)) {
+    console.log(`API: Receiving valid file '${newFilepath}'`);
 
     // set update or create state
     if (data.preview.filepath) {
@@ -47,18 +75,18 @@ exports.setFile = (req, res) => {
 
     // set only if it is a new file or position
     if (
-      newFileName != data.preview.filepath ||
-      newFilePos != data.preview.position
+      newFilepath != data.preview.filepath ||
+      newPosition != data.preview.position
     ) {
-      data.preview.filepath = newFileName;
-      data.preview.position = newFilePos;
+      data.preview.filepath = newFilepath;
+      data.preview.position = newPosition;
       exports.notifyClientsToUpdate();
     }
 
     //res.send('Valid file')
     res.end();
   } else {
-    console.log(`API: Receiving not valid file '${newFileName}'`);
+    console.log(`API: Receiving not valid file '${newFilepath}'`);
     res.status(400); // Bad Request
     //res.send('No valid file')
     res.end();

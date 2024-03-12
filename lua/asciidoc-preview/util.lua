@@ -26,6 +26,22 @@ function M.validatedValue(value, valid_values, default)
   return default or string.lower(valid_values[1] or '')
 end
 
+---Returns a valid port.
+---If not, the given default port is returned.
+--
+-- TODO: If possible, do not specify a port.
+--       Determine a free port from a certain value.
+--
+---@param port integer The port to be validated
+---@param default integer The default port if the port is not valid
+---@return integer port The validated port
+function M.validatedPort(port, default)
+  if port < 10000 or port > 65535 then
+    return default
+  end
+  return port
+end
+
 ---Returns the root directory of the plugin.
 ---
 --- FIX: Optimize it or find a better alternative

@@ -5,6 +5,8 @@ if ! cd "$(dirname "$0")/.."; then exit; fi
 
 # set absolute path for server command
 cmd=$(realpath "server.js")
+# Pass the command line arguments of the script to the command.
+#cmd="${cmd} ${*}"
 
 # check if a command exists
 isCommand() {
@@ -32,7 +34,9 @@ fi
 # start server
 if isCommand node && [[ -f "$cmd" ]]; then
   #node "$cmd" > logs/server.log 2>&1 &
-  nohup node "$cmd" >logs/server.log 2>&1 &
+  echo "$cmd" >logs/server.log
+  echo "$@" >>logs/server.log
+  nohup node "$cmd" "$@" >>logs/server.log 2>&1 &
   #nohup node "$cmd" > /dev/null 2>&1 &
   #nohup node "$cmd" --open-browser > /dev/null 2>&1 &
 fi

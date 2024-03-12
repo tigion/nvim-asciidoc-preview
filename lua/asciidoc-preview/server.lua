@@ -1,27 +1,7 @@
 local config = require('asciidoc-preview.config')
+local commands = require('asciidoc-preview.config').commands
 
 local M = {}
-
-local apiURLs = {
-  hi = config.server.url .. '/api/hi',
-  file = config.server.url .. '/api/file',
-  actions = {
-    notify = {
-      page = config.server.url .. '/api/actions/notify?type=page',
-      content = config.server.url .. '/api/actions/notify?type=content',
-    },
-    stop = config.server.url .. '/api/actions/stop',
-  },
-}
-
-local command = {
-  start = config.server.start,
-  postStop = 'curl -s -X POST ' .. apiURLs.actions.stop,
-  getHi = 'curl -s -X GET ' .. apiURLs.hi,
-  putFile = 'curl -s -X PUT ' .. apiURLs.file,
-  postNotifyPage = 'curl -s -X POST ' .. apiURLs.actions.notify.page,
-  postNotifyContent = 'curl -s -X POST ' .. apiURLs.actions.notify.content,
-}
 
 ---Executes a command if the server is running.
 --
@@ -48,7 +28,7 @@ end
 ---The correct server is validated with a simple Hi message.
 ---@return boolean?
 function M.isRunning()
-  local handle = io.popen(command.getHi)
+  local handle = io.popen(commands.getHi)
   if handle then
     local read = handle:read('*a')
     if read and read ~= '' and vim.json.decode(read)['hi'] == config.server.hi then
@@ -65,7 +45,7 @@ function M.start()
   -- execCommand(command.start, false)
   if not M.isRunning() then
     -- print('AsciiDocPreview: Starting ...')
-    os.execute(command.start) -- start server
+    os.execute(commands.start) -- start server
     vim.wait(5000, M.isRunning) -- Give server some time to start
 
     -- NOTE: With `io.popen()` nvim hangs sometimes
@@ -81,7 +61,15 @@ end
 
 ---Stops the server.
 function M.stop()
-  execCommand(command.postStop)
+  execCommand(commands.postStop)
+end
+
+---Sends the options to the server.
+function M.sendOptions()
+  local converter = config.options.server.converter
+  local json = '\'{ "options": { "converter": "' .. converter .. '" } }\''
+  local cmd = commands.putOptions .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
+  execCommand(cmd)
 end
 
 ---Sends the filepath and position to the server.
@@ -89,21 +77,21 @@ end
 ---@param position? integer Scroll position for the preview
 function M.sendFile(filepath, position)
   position = position or -1
-  local json = '\'{ "file": { "path": "' .. filepath .. '", "position": ' .. position .. " } }'"
-  local cmd = command.putFile .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
+  local json = '\'{ "preview": { "filepath": "' .. filepath .. '", "position": ' .. position .. " } }'"
+  local cmd = commands.putFile .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   execCommand(cmd)
 end
 
 ---Sends a notification to the server to initiate
 ---a reload of the preview website.
 function M.sendPageNotify()
-  execCommand(command.postNotifyPage)
+  execCommand(commands.postNotifyPage)
 end
 
 ---Sends a notification to the server to initiate
 ---a reload the content of the preview website.
 function M.sendContentNotify()
-  execCommand(command.postNotifyContent)
+  execCommand(commands.postNotifyContent)
 end
 
 return M

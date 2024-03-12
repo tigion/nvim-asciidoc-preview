@@ -64,6 +64,7 @@ function M.startServer()
   createAutoCommands()
   createUserCommands()
   server.start()
+  server.sendOptions()
   if server.isRunning() then
     M.sendFileToServer()
     M.openBrowser() -- v1: here, v2: opens with node.js server

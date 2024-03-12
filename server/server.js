@@ -16,15 +16,26 @@ const apiController = require("./controllers/api.js");
 const helper = require("./helper");
 
 // handle command line arguments
+console.log(process.argv);
 for (let i = 2; i < process.argv.length; i++) {
   switch (process.argv[i]) {
+    // set port
+    case "--port": {
+      i++;
+      if (i == process.argv.length) continue;
+      const port = process.argv[i];
+      if (helper.isValidPort(port)) {
+        data.config.server.port = port;
+      }
+      break;
+    }
     // set Asciidoc file
     case "--file": {
       i++;
       if (i == process.argv.length) continue;
       const file = process.argv[i];
       if (helper.isValidFile(file, data.config.asciidoc.extensions)) {
-        data.preview.file.path = file;
+        data.preview.filepath = file;
       }
       break;
     }

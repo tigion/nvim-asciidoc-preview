@@ -129,14 +129,16 @@ Currently available settings for the user:
 
 ```lua
 {
-  -- Server options
   server = {
     -- Determines how the AsciiDoc file is converted to HTML for the preview.
-    -- `js`  - Asciidoctor.js (no local installation needed)
-    -- `cmd` - Asciidoctor command (local installation needed)
+    -- `js`  - asciidoctor.js (no local installation needed)
+    -- `cmd` - asciidoctor command (local installation needed)
     converter = 'js',
+
+    -- Determines the local port of the preview website.
+    -- Must be between 10000 and 65535.
+    port = 11235,
   },
-  -- Preview options
   preview = {
     -- Determines the scroll position of the preview website.
     -- `current` - Keep current scroll position

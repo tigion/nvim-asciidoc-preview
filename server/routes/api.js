@@ -12,13 +12,21 @@ const apiController = require("../controllers/api.js");
 // get server
 router.get("/server", apiController.getServer);
 
+// --- resource: options ---
+
+// get options
+router.get("/options", apiController.getOptions);
+
+// set or update options
+router.put("/options", apiController.setOptions);
+
 // --- resource: file ---
 
-// get file
-router.get("/file", apiController.getFile);
+// get preview
+router.get("/preview", apiController.getPreview);
 
-// set or update file
-router.put("/file", apiController.setFile);
+// set or update preview
+router.put("/preview", apiController.setPreview);
 
 // --- resource: hi ---
 
