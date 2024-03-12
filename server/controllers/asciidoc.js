@@ -42,7 +42,7 @@ function convertWithAsciidoctorJs(file) {
       webfonts: "", // use webfonts
       "data-uri": "", // embed images (base64)
     },
-    //'base_dir': '',
+    //base_dir: '',
     extension_registry: registry,
   });
 }
@@ -52,7 +52,7 @@ function convertWithAsciidoctorCmd(file) {
   // -a ... set document attributes (overwrites source attributes)
   //        - webfonts ... use webfonts
   //        - toc=auto ... theme of content
-  //        - data-uri ... embedd images as base64
+  //        - data-uri ... embed images as base64
   // -e ... for embedded documents
   // -o ... output target (`-` stdout)
   const attributes = "-a toc=auto -a data-uri";
@@ -60,9 +60,17 @@ function convertWithAsciidoctorCmd(file) {
   let cmd = "asciidoctor";
   cmd = `${cmd} ${resources} ${attributes} -o - "${file}"`;
 
+  // FIX: Handle build artefacts?!
+  //      - Remove all generated files (content of build folder)
+  //      - Generate on source file path
+  //      - Generate on ~/.local/state/nvim/asciidoctor-preview
+  //
   // convert mit Asciidoctor command
   const childProcess = require("child_process");
-  const stdout = childProcess.execSync(cmd);
+  // const stdout = childProcess.execSync(cmd)
+  const stdout = childProcess.execSync(
+    "mkdir -p build_cache && cd build_cache && " + cmd,
+  );
 
   // add script for client registration and refresh event
   // (not perfect, but it works)

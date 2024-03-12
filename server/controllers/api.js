@@ -154,6 +154,13 @@ exports.notifyClientsToUpdate = () => {
 // send close notify to all clients
 exports.notifyClientsToClose = () => {
   data.preview.isFinished = true;
+
+  // FIX: Remove build artefacts
+  //
+  // remove build cache (only for local asciidoctor command)
+  const childProcess = require("child_process");
+  childProcess.execSync("rm -rf build_cache");
+
   console.log("Server: Notify all clients to close");
   data.clients.forEach((client) => client.response.end("data: close\n\n"));
 };

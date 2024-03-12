@@ -11,5 +11,8 @@
 .DS_Store
 Icon[]
 
+# asciidoctor
+server/build_cache
+
 # keep
 !.keep
