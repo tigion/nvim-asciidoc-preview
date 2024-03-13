@@ -18,6 +18,7 @@ exports.page = (_req, res) => {
       asciidoc.convertAsciidocToHtml(
         data.config.asciidoc.converter,
         data.preview.filepath,
+        data.config.cachedir,
       ),
     );
   } else {

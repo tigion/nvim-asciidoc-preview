@@ -28,7 +28,6 @@ exports.getOptions = (req, res) => {
 exports.setOptions = (req, res) => {
   // get received data
   const newConverter = req.body.options.converter;
-  console.log("DEBUG: " + newConverter);
 
   // check the given newConverter
   if (helper.isValidConverter(newConverter)) {
@@ -155,11 +154,11 @@ exports.notifyClientsToUpdate = () => {
 exports.notifyClientsToClose = () => {
   data.preview.isFinished = true;
 
-  // FIX: Remove build artefacts
-  //
   // remove build cache (only for local asciidoctor command)
-  const childProcess = require("child_process");
-  childProcess.execSync("rm -rf build_cache");
+  if (data.config.asciidoc.converter == "cmd") {
+    const childProcess = require("child_process");
+    childProcess.execSync("rm -rf " + data.config.cachedir);
+  }
 
   console.log("Server: Notify all clients to close");
   data.clients.forEach((client) => client.response.end("data: close\n\n"));

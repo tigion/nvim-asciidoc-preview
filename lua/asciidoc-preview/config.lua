@@ -47,42 +47,38 @@ local defaults = {
 ---@type AsciidocPreviewOptions
 M.options = vim.deepcopy(defaults)
 
----@type string
-local root_dir = vim.g.tigion_asciidocPreview_rootDir
+-- Set the needed directories
+local root_dir = vim.g.tigion_asciidocPreview_rootDir ---@type string
+local log_dir = vim.fn.stdpath('log') ---@type string
+local cache_dir = vim.fn.stdpath('cache') ---@type string
 
 ---@class AsciidocPreviewServer
 ---@field start string The filepath of the start script for the server
+---@field args table The arguments (option with parameter) for the start script
 ---@field url string The URL with port for the preview in the web browser
 ---@field hi string The validation message for the correct server
 M.server = {
-  start = root_dir .. '/server/scripts/start.sh --port ' .. M.options.server.port,
+  start = ('"%s/server/scripts/start.sh"'):format(root_dir),
+  args = {
+    port = { option = '--port', parameter = M.options.server.port },
+    log_dir = { option = '--logdir', parameter = ('"%s"'):format(log_dir) },
+    cache_dir = { option = '--cachedir', parameter = ('"%s"'):format(cache_dir) },
+  },
   url = 'http://localhost:' .. M.options.server.port,
   hi = 'Coffee please',
 }
 
----@class AsciidocPreviewApiURLs
-M.apiURLs = {
-  hi = M.server.url .. '/api/hi',
-  file = M.server.url .. '/api/preview',
-  options = M.server.url .. '/api/options',
-  actions = {
-    notify = {
-      page = M.server.url .. '/api/actions/notify?type=page',
-      content = M.server.url .. '/api/actions/notify?type=content',
-    },
-    stop = M.server.url .. '/api/actions/stop',
-  },
-}
-
 ---@class AsciidocPreviewCommands
 M.commands = {
-  start = M.server.start,
-  postStop = 'curl -s -X POST ' .. M.apiURLs.actions.stop,
-  getHi = 'curl -s -X GET ' .. M.apiURLs.hi,
-  putFile = 'curl -s -X PUT ' .. M.apiURLs.file,
-  putOptions = 'curl -s -X PUT ' .. M.apiURLs.options,
-  postNotifyPage = 'curl -s -X POST ' .. M.apiURLs.actions.notify.page,
-  postNotifyContent = 'curl -s -X POST ' .. M.apiURLs.actions.notify.content,
+  start = util.getCmdWithArgs(M.server.start, M.server.args),
+  -- stylua: ignore start
+  post_stop        = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/stop'),
+  get_hi           = ('%s %s%s'):format('curl -s -X GET' , M.server.url, '/api/hi'),
+  put_file         = ('%s %s%s'):format('curl -s -X PUT' , M.server.url, '/api/preview'),
+  put_options      = ('%s %s%s'):format('curl -s -X PUT' , M.server.url, '/api/options'),
+  post_notify_page = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/notify?type=page'),
+  post_notify_body = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/notify?type=content'),
+  -- stylua: ignore end
 }
 
 ---Setting up with the user options.
@@ -100,36 +96,26 @@ function M.setup(opts)
   M.options.preview.position = util.validatedValue(M.options.preview.position, POSITIONS, defaults.preview.position)
   M.options.preview.refresh = util.validatedValue(M.options.preview.refresh, REFRESHES, defaults.preview.refresh)
 
-  -- FIX: Optimize validation and config setup of server, apiURLs and commands
+  -- FIX: Optimize validation and config setup of server and commands
 
-  -- Set Server URL with port
-  M.server.start = root_dir .. '/server/scripts/start.sh --port ' .. M.options.server.port
+  -- Set server URL with port
+  M.server.args.port.parameter = M.options.server.port
   M.server.url = 'http://localhost:' .. M.options.server.port
 
-  -- Set API URLs
-  M.apiURLs.hi = M.server.url .. '/api/hi'
-  M.apiURLs.file = M.server.url .. '/api/preview'
-  M.apiURLs.options = M.server.url .. '/api/options'
-  M.apiURLs.actions = {
-    notify = {
-      page = M.server.url .. '/api/actions/notify?type=page',
-      content = M.server.url .. '/api/actions/notify?type=content',
-    },
-    stop = M.server.url .. '/api/actions/stop',
-  }
-
   -- Set commands
-  M.commands.start = M.server.start
-  M.commands.postStop = 'curl -s -X POST ' .. M.apiURLs.actions.stop
-  M.commands.getHi = 'curl -s -X GET ' .. M.apiURLs.hi
-  M.commands.putFile = 'curl -s -X PUT ' .. M.apiURLs.file
-  M.commands.putOptions = 'curl -s -X PUT ' .. M.apiURLs.options
-  M.commands.postNotifyPage = 'curl -s -X POST ' .. M.apiURLs.actions.notify.page
-  M.commands.postNotifyContent = 'curl -s -X POST ' .. M.apiURLs.actions.notify.content
+  M.commands.start = util.getCmdWithArgs(M.server.start, M.server.args)
+  -- stylua: ignore start
+  M.commands.post_stop        = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/stop')
+  M.commands.get_hi           = ('%s %s%s'):format('curl -s -X GET' , M.server.url, '/api/hi')
+  M.commands.put_file         = ('%s %s%s'):format('curl -s -X PUT' , M.server.url, '/api/preview')
+  M.commands.put_options      = ('%s %s%s'):format('curl -s -X PUT' , M.server.url, '/api/options')
+  M.commands.post_notify_page = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/notify?type=page')
+  M.commands.post_notify_body = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/notify?type=content')
+  -- stylua: ignore end
 
   -- print('setup: ' .. vim.inspect(M.server))
-  -- print('setup: ' .. vim.inspect(M.apiURLs))
   -- print('setup: ' .. vim.inspect(M.commands))
+  -- print(M.commands.start)
 end
 
 return M

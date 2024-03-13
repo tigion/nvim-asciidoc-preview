@@ -3,30 +3,42 @@
 # go to parent directory
 if ! cd "$(dirname "$0")/.."; then exit; fi
 
-# timestamp
-timestamp="$(date '+%Y%m%d %H:%M:%S')"
-logfile="logs/nvim-asciidoc-preview-server.log"
-line="--------------------------------------------------------"
-
-# set absolute path for server command
-cmd=$(realpath "server.js")
+# set log file
+for ((i = 1; i <= $#; i++)); do
+  if [ "${!i}" == "--logdir" ]; then
+    j=$((i + 1))
+    logdir="${!j}"
+  fi
+done
 
 # check if a command exists
 isCommand() {
   command -v "$1" &>/dev/null
 }
 
+# log message
 logMessage() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') [$1]: $2" >>"$logfile"
 }
 
-# create log directory
-mkdir -p logs
+# check log directory
+if [ ! -d "$logdir" ]; then
+  echo "Log directory '$logdir' does not exist. Use default: 'logs/'"
+  logdir="logs/"
+  mkdir -p logs
+fi
+
+logfile="${logdir%/}/nvim-asciidoc-preview-server.log"
+line="--------------------------------------------------------"
+
+# set absolute path for server command
+cmd=$(realpath "server.js")
 
 # Log only current session
 echo "$line" >"$logfile"
 logMessage "INFO" "Starting script..."
 echo "$line" >>"$logfile"
+logMessage "INFO" "Log file: $logfile"
 
 # check if npm is installed
 if ! isCommand npm && ! isCommand node; then

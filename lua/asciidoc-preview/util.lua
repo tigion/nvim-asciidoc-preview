@@ -7,6 +7,17 @@ local M = {}
 --   return package.config:sub(1, 1) == '\\'
 -- end
 
+---Adds arguments to a command.
+---@param cmd string
+---@param args table
+---@return string
+function M.getCmdWithArgs(cmd, args)
+  for _, arg in pairs(args) do
+    cmd = ('%s %s %s'):format(cmd, arg.option, arg.parameter)
+  end
+  return cmd
+end
+
 ---Returns a value if it is in a table of valid values.
 ---If not, the given default or the first valid value is returned.
 ---@param value string The value to be validated

@@ -7,6 +7,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 // modules
+const parseArgs = require("node:util").parseArgs;
 
 // local modules
 const data = require("./data.js");
@@ -15,36 +16,36 @@ const apiRoute = require("./routes/api.js");
 const apiController = require("./controllers/api.js");
 const helper = require("./helper");
 
+// parse command line arguments
+const args = parseArgs({
+  options: {
+    port: { type: "string" },
+    logdir: { type: "string" },
+    cachedir: { type: "string" },
+    file: { type: "string" },
+    "open-browser": { type: "boolean" },
+  },
+});
+
+// console.log(args);
+
 // handle command line arguments
-console.log(process.argv);
-for (let i = 2; i < process.argv.length; i++) {
-  switch (process.argv[i]) {
-    // set port
-    case "--port": {
-      i++;
-      if (i == process.argv.length) continue;
-      const port = process.argv[i];
-      if (helper.isValidPort(port)) {
-        data.config.server.port = port;
-      }
-      break;
-    }
-    // set Asciidoc file
-    case "--file": {
-      i++;
-      if (i == process.argv.length) continue;
-      const file = process.argv[i];
-      if (helper.isValidFile(file, data.config.asciidoc.extensions)) {
-        data.preview.filepath = file;
-      }
-      break;
-    }
-    // set config
-    case "--open-browser":
-      data.config.openBrowser = true;
-      break;
-  }
+if (helper.isValidPort(parseInt(args.values.port))) {
+  data.config.server.port = parseInt(args.values.port);
 }
+if (helper.isValidDirectory(args.values.logdir)) {
+  data.config.logdir = args.values.logdir;
+}
+if (helper.isValidDirectory(args.values.cachedir)) {
+  data.config.cachedir = args.values.cachedir + "/nvim-asciidoc-preview/";
+}
+if (helper.isValidFile(args.values.file, data.config.asciidoc.extensions)) {
+  data.preview.filepath = args.values.file;
+}
+if (args.values["open-browser"]) {
+  data.config.openBrowser = true;
+}
+console.log(data.config);
 
 // route website: '/'
 app.use("/", indexRoute);

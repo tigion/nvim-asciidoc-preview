@@ -4,12 +4,12 @@
 const reloadScript = '<script src="script.js"></script>';
 
 // convert AsciiDoc to HTML
-function convertAsciidocToHtml(processor, file) {
+function convertAsciidocToHtml(processor, file, cacheDir) {
   switch (processor) {
     case "js":
       return convertWithAsciidoctorJs(file);
     case "cmd":
-      return convertWithAsciidoctorCmd(file);
+      return convertWithAsciidoctorCmd(file, cacheDir);
     default:
       return "<p>Invalid converter!</p>";
   }
@@ -48,7 +48,7 @@ function convertWithAsciidoctorJs(file) {
 }
 
 // convert with local installed Asciidoctor tools
-function convertWithAsciidoctorCmd(file) {
+function convertWithAsciidoctorCmd(file, cacheDir) {
   // -a ... set document attributes (overwrites source attributes)
   //        - webfonts ... use webfonts
   //        - toc=auto ... theme of content
@@ -60,6 +60,10 @@ function convertWithAsciidoctorCmd(file) {
   let cmd = "asciidoctor";
   cmd = `${cmd} ${resources} ${attributes} -o - "${file}"`;
 
+  // set command to run asciidoctor in cache directory
+  cmd = `mkdir -p "${cacheDir}" && cd "${cacheDir}" && ${cmd}`;
+  // console.log("DEBUG: " + cmd);
+
   // FIX: Handle build artefacts?!
   //      - Remove all generated files (content of build folder)
   //      - Generate on source file path
@@ -67,10 +71,7 @@ function convertWithAsciidoctorCmd(file) {
   //
   // convert mit Asciidoctor command
   const childProcess = require("child_process");
-  // const stdout = childProcess.execSync(cmd)
-  const stdout = childProcess.execSync(
-    "mkdir -p build_cache && cd build_cache && " + cmd,
-  );
+  const stdout = childProcess.execSync(cmd);
 
   // add script for client registration and refresh event
   // (not perfect, but it works)

@@ -28,7 +28,7 @@ end
 ---The correct server is validated with a simple Hi message.
 ---@return boolean?
 function M.isRunning()
-  local handle = io.popen(commands.getHi)
+  local handle = io.popen(commands.get_hi)
   if handle then
     local read = handle:read('*a')
     if read and read ~= '' and vim.json.decode(read)['hi'] == config.server.hi then
@@ -61,14 +61,14 @@ end
 
 ---Stops the server.
 function M.stop()
-  execCommand(commands.postStop)
+  execCommand(commands.post_stop)
 end
 
 ---Sends the options to the server.
 function M.sendOptions()
   local converter = config.options.server.converter
   local json = '\'{ "options": { "converter": "' .. converter .. '" } }\''
-  local cmd = commands.putOptions .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
+  local cmd = commands.put_options .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   execCommand(cmd)
 end
 
@@ -78,20 +78,20 @@ end
 function M.sendFile(filepath, position)
   position = position or -1
   local json = '\'{ "preview": { "filepath": "' .. filepath .. '", "position": ' .. position .. " } }'"
-  local cmd = commands.putFile .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
+  local cmd = commands.put_file .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   execCommand(cmd)
 end
 
 ---Sends a notification to the server to initiate
 ---a reload of the preview website.
 function M.sendPageNotify()
-  execCommand(commands.postNotifyPage)
+  execCommand(commands.post_notify_page)
 end
 
 ---Sends a notification to the server to initiate
 ---a reload the content of the preview website.
 function M.sendContentNotify()
-  execCommand(commands.postNotifyContent)
+  execCommand(commands.post_notify_body)
 end
 
 return M

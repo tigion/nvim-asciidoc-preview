@@ -2,6 +2,8 @@
 
 // The default configuration
 const config = {
+  logdir: "logs/",
+  cachedir: "build_cache/",
   server: {
     // The server hostname
     hostname: "127.0.0.1",

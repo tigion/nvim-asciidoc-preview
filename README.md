@@ -185,3 +185,12 @@ vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', opts)
 4. Describe your problem and include:
    - the `checkhealth` output
    - the [Installation/Configuration](#installation) with the used package manager
+   - the content of the `~/.local/state/nvim/nvim-asciidoc-preview-server.log` file
+
+> [!WARNING]
+> The `nvim-asciidoc-preview-server.log` file contains **private information**
+> from the current/last session. These are, for example, the name of your
+> **home directory** and the names of the **AsciiDoc files** used.
+>
+> Do **not** share this information with others.
+> So please remove or anonymize this information before.
