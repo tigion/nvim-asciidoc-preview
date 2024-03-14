@@ -73,13 +73,11 @@ exports.setPreview = (req, res) => {
     }
 
     // set only if it is a new file or position
-    // if (newFilepath != data.file.path || newPosition != data.file.position) {
-    if (newPosition != data.file.position) {
-      data.file.position = newPosition;
+    if (newPosition != data.preview.position) {
+      data.preview.position = newPosition;
     }
-    data.file.position = -1;
-    if (newFilepath != data.file.path) {
-      data.file.path = newFilepath;
+    if (newFilepath != data.preview.filepath) {
+      data.preview.filepath = newFilepath;
       exports.notifyClientsToUpdate(true);
     }
 
@@ -148,20 +146,20 @@ exports.notifyClientsToUpdate = (isNewFile = false) => {
   console.log("Server: Notify all clients to update");
   if (isNewFile) {
     data.clients.forEach((client) =>
-      client.response.write(`data: ${data.file.position}\n\n`),
+      client.response.write(`data: ${data.preview.position}\n\n`),
     );
     return;
   }
 
   const asciidoc = require("../controllers/asciidoc.js");
   const html = asciidoc.convertAsciidocToHtml(
-    data.asciidoc.converter,
-    data.file.path,
+    data.config.asciidoc.converter,
+    data.preview.filepath,
   );
   const pattern = /<body.*>(\n|.)*<\/body>/g;
   const result = html.match(pattern);
   const message = JSON.stringify({
-    position: data.file.position,
+    position: data.preview.position,
     content: result,
   });
 
