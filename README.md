@@ -8,7 +8,7 @@ A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 >
 > Works on: ✅ Linux, ✅ macOS, but not yet on ❌ Windows (WSL❓)
 
-<img width="1000" alt="Screenshot" src="https://user-images.githubusercontent.com/31811/214418871-14477f16-fe26-4b08-b864-77113997d321.png">
+<img width="1000" alt="screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/9c4d75dc-bf1e-4209-9562-aff054262015">
 
 The plugin started as a playground for learning Neovim plugin programming
 with Lua and a server component with Node.js.
@@ -41,7 +41,9 @@ twice (plugin and server). Helpful tips are welcome.
 - Node.js with `node` and `npm` command
 - `curl` command
 
-The plugin allows optionally using the local installed Asciidoctor tools.
+The plugin allows opt<img width="1517" alt="Screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/c20c34ac-25c8-4e3c-8bf9-8ac080d24872">
+<img width="1517" alt="Screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/c13db0b8-2737-4495-834d-609019e91212">
+ionally using the local installed Asciidoctor tools.
 
 - This requires the `asciidoctor` command with the `asciidoctor-diagram` extension.
   - [Install instruction (de)]
