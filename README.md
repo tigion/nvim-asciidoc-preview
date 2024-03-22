@@ -41,9 +41,7 @@ twice (plugin and server). Helpful tips are welcome.
 - Node.js with `node` and `npm` command
 - `curl` command
 
-The plugin allows opt<img width="1517" alt="Screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/c20c34ac-25c8-4e3c-8bf9-8ac080d24872">
-<img width="1517" alt="Screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/c13db0b8-2737-4495-834d-609019e91212">
-ionally using the local installed Asciidoctor tools.
+The plugin allows optionally using the local installed Asciidoctor tools.
 
 - This requires the `asciidoctor` command with the `asciidoctor-diagram` extension.
   - [Install instruction (de)]
