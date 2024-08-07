@@ -102,7 +102,7 @@ exports.hi = (req, res) => {
 
 // receive action: subscribe client
 exports.subscribe = (req, res) => {
-  console.log("API: Receiving subscribtion");
+  console.log("API: Receiving subscription");
 
   // send header keep alive
   const headers = {
