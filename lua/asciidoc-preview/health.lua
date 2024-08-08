@@ -11,12 +11,15 @@ local error = vim.health.error or vim.health.report_error -- Reports an error.
 
 ---Checks if the current OS is supported.
 local function check_supported_os()
-  local os = vim.loop.os_uname().sysname
+  local os = vim.uv.os_uname().sysname
+  -- get os name
 
   if vim.fn.has('mac') then
     ok('macOS (' .. os .. ') supported')
   elseif vim.fn.has('linux') then
-    ok('Linux (' .. os .. ') supported')
+    -- NOTE: NixOS is not yet supported!
+    --       Write permissions of the plugin directory are currently a problem on NixOS.
+    ok('Linux (' .. os .. ') supported (with limitations, e.g. NixOS)')
   elseif vim.fn.has('wsl') then
     warn('Windows WSL (' .. os .. ') not supported or not yet tested')
   else
@@ -58,6 +61,38 @@ local function check_core_tools()
   check_executable('curl')
 end
 
+---Checks if the given directory is writable.
+---@param dir string Directory path
+---@param name? string Optional Directory name
+local function check_directory(dir, name)
+  if dir == nil then
+    error((name or 'Directory') .. ' is not specified')
+    return
+  end
+  if vim.fn.isdirectory(dir) ~= 1 then
+    error('Directory `' .. dir .. '` does not exist')
+    return
+  end
+  local message = (name or 'Directory') .. ' `' .. dir .. '` is '
+  if vim.fn.filewritable(dir) == 2 then
+    ok(message .. 'writable')
+  else
+    error(message .. 'not writable')
+  end
+end
+
+---Checks required directories.
+local function check_directories()
+  -- Plugin directory must be writable to allow installation of the needed node modules.
+  check_directory(vim.g.tigion_asciidocPreview_rootDir, 'Plugin directory')
+  -- Log directory must be writable to write log files.
+  local dir = vim.fn.stdpath('log')
+  check_directory(dir[1] or dir, 'Log directory')
+  -- Cache directory must be writable to store temporary files for the html preview.
+  dir = vim.fn.stdpath('cache')
+  check_directory(dir[1] or dir, 'Cache directory')
+end
+
 ---Checks required Asciidoctor tools.
 local function check_asciidoctor()
   info("The following warnings or errors can be ignored\nif Asciidoctor.js (`converter = 'js'`) is used.")
@@ -72,6 +107,7 @@ function M.check()
   start('nvim-asciidoc-preview')
   check_supported_os()
   check_core_tools()
+  check_directories()
 
   start('Asciidoctor (optional)')
   check_asciidoctor()

@@ -17,6 +17,13 @@ vim.g.tigion_asciidocPreview_loaded = true
 vim.g.tigion_asciidocPreview_rootDir = vim.fn.expand('<sfile>:p:h:h')
 vim.g.tigion_asciidocPreview_augroupName = 'tigionAsciidocPreview'
 
+-- Checks if the plugin directory is writable
+local plugin_dir = vim.g.tigion_asciidocPreview_rootDir
+if vim.fn.filewritable(plugin_dir) ~= 2 then
+  vim.notify('nvim-asciidoc-preview: Plugin directory is not writable!', vim.log.levels.WARN)
+  vim.notify('Run `:checkhealth asciidoc-preview` to check the health of the plugin.', vim.log.levels.INFO)
+end
+
 -- Create auto commands
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd

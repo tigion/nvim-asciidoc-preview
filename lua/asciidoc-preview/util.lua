@@ -84,7 +84,7 @@ end
 ---@return string
 ---@nodiscard
 function M.getOpenCmd()
-  local os = vim.loop.os_uname().sysname
+  local os = vim.uv.os_uname().sysname
   if os == 'Darwin' then
     return 'open'
   elseif os == 'Linux' then
