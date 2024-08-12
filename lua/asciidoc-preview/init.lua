@@ -11,6 +11,7 @@ local function createAutoCommands()
   local autocmd = vim.api.nvim_create_autocmd
   local myAugroup = augroup(vim.g.tigion_asciidocPreview_augroupName, { clear = false })
 
+  -- Stops the preview when leaving Neovim
   autocmd('VimLeavePre', {
     group = myAugroup,
     callback = function()
@@ -18,10 +19,25 @@ local function createAutoCommands()
     end,
   })
 
-  -- :h BufEnter
-  -- :h BufWritePost
-  -- :h TextChangedI (laggy and needs to send the buffer content)
-  autocmd({ 'BufWritePost' }, {
+  -- Stops the preview when no other AsciiDoc buffers exists.
+  autocmd('BufUnload', {
+    pattern = { '*.asc', '*.adoc', '*.asciidoc' },
+    group = myAugroup,
+    callback = function()
+      if not util.other_asciidoc_buffers_exists() then
+        require('asciidoc-preview').stopServer()
+      end
+    end,
+  })
+
+  -- Refreshes the preview when opening, saving or switching an AsciiDoc file.
+  --
+  -- NOTE: In some cases `BufEnter` does not fire, so we use `WinEnter`
+  --
+  -- TODO: TextChanged, TextChangedI
+  --       - laggy: needs time framed and to send the buffer content
+  --
+  autocmd({ 'WinEnter', 'BufWritePost' }, {
     pattern = { '*.asc', '*.adoc', '*.asciidoc' },
     --buffer = 0, -- 0 = current buffer number
     group = myAugroup,
@@ -61,13 +77,24 @@ M.setup = config.setup
 -- Gets things ready and start the server.
 -- When started, open the preview in the web browser.
 function M.startServer()
+  if not util.is_asciidoc_buffer() then
+    vim.notify(
+      'nvim-asciidoc-preview: The preview can only be started if you are in an AsciiDoc file.',
+      vim.log.levels.WARN
+    )
+    return
+  end
   createAutoCommands()
   createUserCommands()
   server.start()
-  server.sendOptions()
   if server.isRunning() then
+    server.sendOptions()
     M.sendFileToServer()
     M.openBrowser() -- v1: here, v2: opens with node.js server
+  else
+    vim.notify('nvim-asciidoc-preview: Preview server failed to start.', vim.log.levels.WARN)
+    vim.notify('Run `:checkhealth asciidoc-preview` to check the health of the plugin.', vim.log.levels.INFO)
+    M.stopServer()
   end
 end
 

@@ -43,7 +43,9 @@ end
 ---Starts the server if not running.
 function M.start()
   -- execCommand(command.start, false)
-  if not M.isRunning() then
+  if M.isRunning() then
+    vim.notify('nvim-asciidoc-preview: The preview server is already running.', vim.log.levels.INFO)
+  else
     -- print('AsciiDocPreview: Starting ...')
     os.execute(commands.start) -- start server
     vim.wait(5000, M.isRunning) -- Give server some time to start

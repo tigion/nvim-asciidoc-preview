@@ -60,13 +60,13 @@ end
 ---@return any
 ---@nodiscard
 function M.getPluginPath()
-  -- Variante 1: global editor variable
+  -- Variant 1: global editor variable
   local path = vim.g.tigion_asciidocPreview_rootDir
   if path then
     return path
   end
 
-  -- Variante 2: debug library
+  -- Variant 2: debug library
   --print(vim.fn.stdpath('data'))
   --print(debug.getinfo(2, 'S').source:sub(2))
   local sep = package.config:sub(1, 1) -- `/` or `\\` (windows)
@@ -107,6 +107,31 @@ function M.getCurrentLinePositionInPercent()
   local currentLine = vim.api.nvim_win_get_cursor(0)[1]
   local position = 100 * currentLine / maxLine
   return position
+end
+
+---Returns true if the current buffer type is asciidoc.
+---@param bufnr? number
+---@return boolean
+---@nodiscard
+function M.is_asciidoc_buffer(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  return vim.fn.getbufvar(bufnr, '&filetype') == 'asciidoc'
+end
+
+---Returns true if more than one loaded asciidoc buffer exists.
+---@return boolean
+---@nodiscard
+function M.other_asciidoc_buffers_exists()
+  local count = 0
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if M.is_asciidoc_buffer(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+      count = count + 1
+      if count > 1 then
+        return true
+      end
+    end
+  end
+  return false
 end
 
 return M

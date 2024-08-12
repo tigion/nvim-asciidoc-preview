@@ -28,8 +28,8 @@ end
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 augroup(vim.g.tigion_asciidocPreview_augroupName, { clear = true })
-autocmd('BufEnter', {
-  pattern = { '*.asc', '*.adoc', '*.asciidoc' },
+autocmd('FileType', {
+  pattern = 'asciidoc',
   group = vim.g.tigion_asciidocPreview_augroupName,
   callback = function()
     -- Create user commands
