@@ -48,23 +48,34 @@ local function create_auto_commands()
   })
 end
 
--- Clears auto commands
+-- Clears auto commands.
 local function clear_auto_commands()
   vim.api.nvim_clear_autocmds({ group = vim.g.tigion_asciidocPreview_augroupName })
 end
 
--- Creates user commands
-local function create_user_commands()
-  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require('asciidoc-preview').notify_server, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require('asciidoc-preview').open_browser, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require('asciidoc-preview').stop_server, {})
+---Creates user commands in current or given asciidoc buffer.
+---@param bufnr? number
+function M.create_user_commands(bufnr)
+  bufnr = bufnr or 0 -- `0` is an alias for current buffer number
+  vim.api.nvim_buf_create_user_command(bufnr, 'AsciiDocPreviewNotify', require('asciidoc-preview').notify_server, {})
+  vim.api.nvim_buf_create_user_command(bufnr, 'AsciiDocPreviewOpen', require('asciidoc-preview').open_browser, {})
+  vim.api.nvim_buf_create_user_command(bufnr, 'AsciiDocPreviewStop', require('asciidoc-preview').stop_server, {})
 end
 
--- Deletes user commands
-local function delete_user_commands()
-  vim.api.nvim_del_user_command('AsciiDocPreviewNotify')
-  vim.api.nvim_del_user_command('AsciiDocPreviewOpen')
-  vim.api.nvim_del_user_command('AsciiDocPreviewStop')
+-- Creates user commands in all asciidoc buffers.
+function M.create_user_commands_all()
+  for _, bufnr in ipairs(util.get_asciidoc_buffers()) do
+    M.create_user_commands(bufnr)
+  end
+end
+
+-- Deletes user commands in all asciidoc buffers.
+local function delete_user_commands_all()
+  for _, bufnr in ipairs(util.get_asciidoc_buffers()) do
+    vim.api.nvim_buf_del_user_command(bufnr, 'AsciiDocPreviewNotify')
+    vim.api.nvim_buf_del_user_command(bufnr, 'AsciiDocPreviewOpen')
+    vim.api.nvim_buf_del_user_command(bufnr, 'AsciiDocPreviewStop')
+  end
 end
 
 -- Setting up
@@ -85,9 +96,10 @@ function M.start_server()
     return
   end
   create_auto_commands()
-  create_user_commands()
+  M.create_user_commands_all()
   server.start()
   if server.is_running() then
+    vim.g.tigion_asciidocPreview_isStarted = true
     server.send_options()
     M.send_file_to_server()
     M.open_browser() -- v1: here, v2: opens with node.js server
@@ -100,9 +112,10 @@ end
 
 -- Stops the server and clean things up.
 function M.stop_server()
+  vim.g.tigion_asciidocPreview_isStarted = false
   server.stop()
   clear_auto_commands()
-  delete_user_commands()
+  delete_user_commands_all()
 end
 
 -- Sends a file to the server.

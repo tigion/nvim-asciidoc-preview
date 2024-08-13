@@ -11,6 +11,7 @@ local M = {}
 ---@param cmd string
 ---@param args table
 ---@return string
+---@nodiscard
 function M.get_cmd_with_args(cmd, args)
   for _, arg in pairs(args) do
     cmd = ('%s %s %s'):format(cmd, arg.option, arg.parameter)
@@ -46,6 +47,7 @@ end
 ---@param port integer The port to be validated
 ---@param default integer The default port if the port is not valid
 ---@return integer port The validated port
+---@nodiscard
 function M.validated_port(port, default)
   if port < 10000 or port > 65535 then
     return default
@@ -118,18 +120,25 @@ function M.is_asciidoc_buffer(bufnr)
   return vim.fn.getbufvar(bufnr, '&filetype') == 'asciidoc'
 end
 
+---Returns the list of asciidoc buffers.
+---@return table
+---@nodiscard
+function M.get_asciidoc_buffers()
+  local buffers = {}
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if M.is_asciidoc_buffer(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+      table.insert(buffers, bufnr)
+    end
+  end
+  return buffers
+end
+
 ---Returns true if more than one loaded asciidoc buffer exists.
 ---@return boolean
 ---@nodiscard
 function M.other_asciidoc_buffers_exists()
-  local count = 0
-  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    if M.is_asciidoc_buffer(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
-      count = count + 1
-      if count > 1 then
-        return true
-      end
-    end
+  if #M.get_asciidoc_buffers() > 1 then
+    return true
   end
   return false
 end
