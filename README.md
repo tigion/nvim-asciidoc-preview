@@ -26,9 +26,11 @@ twice (plugin and server). Helpful tips are welcome.
 
 - Once started with `:AsciiDocPreview`, a preview of the current AsciiDoc
   file is shown in the web browser.
-- The preview is updated every time the AsciiDoc file is saved.
-- When exiting Neovim or using the `:AsciiDocPreviewStop` command,
-  the preview server is terminated in the background.
+- The preview is updated every time the AsciiDoc file is saved or a new
+  AsciiDoc file is opened.
+- When exiting Neovim, no open Asciidoc files exists or using the
+  `:AsciiDocPreviewStop` command, the preview server is terminated in the
+  background.
 - The generation of the HTML preview is done either with:
   - [Asciidoctor.js](https://docs.asciidoctor.org/asciidoctor.js/latest/)
     (default, no local installed Asciidoctor needed)
@@ -155,9 +157,9 @@ Currently available settings for the user:
 | Command                  | Description                                                                                                       |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
 | `:AsciiDocPreview`       | Starts the AsciiDoc preview server in background and opens the current AsciiDoc file in the standard web browser. |
-| `:AsciiDocPreviewStop`   | Stops the AsciiDoc preview server.                                                                                |
+| `:AsciiDocPreviewStop`   | (if needed) Stops the AsciiDoc preview server.                                                                    |
 | `:AsciiDocPreviewOpen`   | (if needed) (Re)Opens the current AsciiDoc file in the standard web browser.                                      |
-| `:AsciiDocPreviewNotify` | (if needed) Notifies server about an update on the last saved AsciiDoc file.                                      |
+| `:AsciiDocPreviewNotify` | (if needed) Notifies the server to display the current AsciiDoc file in the preview.                              |
 
 A keymap suggestion:
 
@@ -165,15 +167,16 @@ A keymap suggestion:
 vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', { desc = 'Preview AsciiDoc document' })
 ```
 
-To use the same keymap for different file types and plugins (e.g. [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)),
-place it in `after/ftplugin/asciidoc.lua`.
-This way the keymap is only set for AsciiDoc files.
+- To use the same keymap for different file types and plugins (e.g. [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)),
+  place the following in `after/ftplugin/asciidoc.lua`:
 
-```lua
-local opts = { buffer = true, silent = true }
-opts.desc = 'Preview AsciiDoc document'
-vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', opts)
-```
+  ```lua
+  local opts = { buffer = true, silent = true }
+  opts.desc = 'Preview AsciiDoc document'
+  vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', opts)
+  ```
+
+  This way the keymap is only set for AsciiDoc files.
 
 ## FAQ
 
