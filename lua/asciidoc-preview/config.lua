@@ -70,7 +70,7 @@ M.server = {
 
 ---@class AsciidocPreviewCommands
 M.commands = {
-  start = util.getCmdWithArgs(M.server.start, M.server.args),
+  start = util.get_cmd_with_args(M.server.start, M.server.args),
   -- stylua: ignore start
   post_stop        = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/stop'),
   get_hi           = ('%s %s%s'):format('curl -s -X GET' , M.server.url, '/api/hi'),
@@ -90,11 +90,11 @@ function M.setup(opts)
   -- M.options = vim.tbl_deep_extend('force', M.options, opts or {})
 
   -- Validate options
-  M.options.server.converter = util.validatedValue(M.options.server.converter, CONVERTERS, defaults.server.converter)
-  M.options.server.port = util.validatedPort(M.options.server.port, defaults.server.port)
-  M.options.preview.notify = util.validatedValue(M.options.preview.notify, NOTIFIES, defaults.preview.notify)
-  M.options.preview.position = util.validatedValue(M.options.preview.position, POSITIONS, defaults.preview.position)
-  M.options.preview.refresh = util.validatedValue(M.options.preview.refresh, REFRESHES, defaults.preview.refresh)
+  M.options.server.converter = util.validated_value(M.options.server.converter, CONVERTERS, defaults.server.converter)
+  M.options.server.port = util.validated_port(M.options.server.port, defaults.server.port)
+  M.options.preview.notify = util.validated_value(M.options.preview.notify, NOTIFIES, defaults.preview.notify)
+  M.options.preview.position = util.validated_value(M.options.preview.position, POSITIONS, defaults.preview.position)
+  M.options.preview.refresh = util.validated_value(M.options.preview.refresh, REFRESHES, defaults.preview.refresh)
 
   -- FIX: Optimize validation and config setup of server and commands
 
@@ -103,7 +103,7 @@ function M.setup(opts)
   M.server.url = 'http://localhost:' .. M.options.server.port
 
   -- Set commands
-  M.commands.start = util.getCmdWithArgs(M.server.start, M.server.args)
+  M.commands.start = util.get_cmd_with_args(M.server.start, M.server.args)
   -- stylua: ignore start
   M.commands.post_stop        = ('%s %s%s'):format('curl -s -X POST', M.server.url, '/api/actions/stop')
   M.commands.get_hi           = ('%s %s%s'):format('curl -s -X GET' , M.server.url, '/api/hi')

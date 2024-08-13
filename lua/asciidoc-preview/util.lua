@@ -11,7 +11,7 @@ local M = {}
 ---@param cmd string
 ---@param args table
 ---@return string
-function M.getCmdWithArgs(cmd, args)
+function M.get_cmd_with_args(cmd, args)
   for _, arg in pairs(args) do
     cmd = ('%s %s %s'):format(cmd, arg.option, arg.parameter)
   end
@@ -25,7 +25,7 @@ end
 ---@param default? string The default value if the value is not in the table
 ---@return string value The validated value
 ---@nodiscard
-function M.validatedValue(value, valid_values, default)
+function M.validated_value(value, valid_values, default)
   -- NOTE: vim.tbl_contains(valid_values, value)
   for _, v in pairs(valid_values) do
     v = string.lower(v)
@@ -46,7 +46,7 @@ end
 ---@param port integer The port to be validated
 ---@param default integer The default port if the port is not valid
 ---@return integer port The validated port
-function M.validatedPort(port, default)
+function M.validated_port(port, default)
   if port < 10000 or port > 65535 then
     return default
   end
@@ -59,7 +59,7 @@ end
 ---
 ---@return any
 ---@nodiscard
-function M.getPluginPath()
+function M.get_plugin_path()
   -- Variant 1: global editor variable
   local path = vim.g.tigion_asciidocPreview_rootDir
   if path then
@@ -83,7 +83,7 @@ end
 ---
 ---@return string
 ---@nodiscard
-function M.getOpenCmd()
+function M.get_open_cmd()
   local os = vim.uv.os_uname().sysname
   if os == 'Darwin' then
     return 'open'
@@ -102,10 +102,10 @@ end
 ---Returns the current line position in percent.
 ---@return number
 ---@nodiscard
-function M.getCurrentLinePositionInPercent()
-  local maxLine = vim.api.nvim_buf_line_count(0)
-  local currentLine = vim.api.nvim_win_get_cursor(0)[1]
-  local position = 100 * currentLine / maxLine
+function M.get_current_line_position_in_percent()
+  local max_line = vim.api.nvim_buf_line_count(0)
+  local current_line = vim.api.nvim_win_get_cursor(0)[1]
+  local position = 100 * current_line / max_line
   return position
 end
 

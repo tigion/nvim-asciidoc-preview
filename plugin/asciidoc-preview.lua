@@ -33,6 +33,6 @@ autocmd('FileType', {
   group = vim.g.tigion_asciidocPreview_augroupName,
   callback = function()
     -- Create user commands
-    vim.api.nvim_create_user_command('AsciiDocPreview', require('asciidoc-preview').startServer, {})
+    vim.api.nvim_create_user_command('AsciiDocPreview', require('asciidoc-preview').start_server, {})
   end,
 })

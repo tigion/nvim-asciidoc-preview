@@ -15,10 +15,10 @@ local M = {}
 -- - vim.api.nvim_command(...)
 --
 ---@param cmd string
----@param serverMustRun? boolean
-local function execCommand(cmd, serverMustRun)
-  serverMustRun = serverMustRun or true
-  if M.isRunning() == serverMustRun then
+---@param server_must_run? boolean
+local function exec_command(cmd, server_must_run)
+  server_must_run = server_must_run or true
+  if M.is_running() == server_must_run then
     io.popen(cmd)
     -- os.execute(cmd)
   end
@@ -27,7 +27,7 @@ end
 ---Checks if the server is running.
 ---The correct server is validated with a simple Hi message.
 ---@return boolean?
-function M.isRunning()
+function M.is_running()
   local handle = io.popen(commands.get_hi)
   if handle then
     local read = handle:read('*a')
@@ -42,13 +42,13 @@ end
 
 ---Starts the server if not running.
 function M.start()
-  -- execCommand(command.start, false)
-  if M.isRunning() then
+  -- exec_command(command.start, false)
+  if M.is_running() then
     vim.notify('nvim-asciidoc-preview: The preview server is already running.', vim.log.levels.INFO)
   else
     -- print('AsciiDocPreview: Starting ...')
     os.execute(commands.start) -- start server
-    vim.wait(5000, M.isRunning) -- Give server some time to start
+    vim.wait(5000, M.is_running) -- Give server some time to start
 
     -- NOTE: With `io.popen()` nvim hangs sometimes
     --
@@ -63,37 +63,37 @@ end
 
 ---Stops the server.
 function M.stop()
-  execCommand(commands.post_stop)
+  exec_command(commands.post_stop)
 end
 
 ---Sends the options to the server.
-function M.sendOptions()
+function M.send_options()
   local converter = config.options.server.converter
   local json = '\'{ "options": { "converter": "' .. converter .. '" } }\''
   local cmd = commands.put_options .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
-  execCommand(cmd)
+  exec_command(cmd)
 end
 
 ---Sends the filepath and position to the server.
 ---@param filepath string Filename with the full path
 ---@param position? integer Scroll position for the preview
-function M.sendFile(filepath, position)
+function M.send_file(filepath, position)
   position = position or -1
   local json = '\'{ "preview": { "filepath": "' .. filepath .. '", "position": ' .. position .. " } }'"
   local cmd = commands.put_file .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
-  execCommand(cmd)
+  exec_command(cmd)
 end
 
 ---Sends a notification to the server to initiate
 ---a reload of the preview website.
-function M.sendPageNotify()
-  execCommand(commands.post_notify_page)
+function M.send_page_notify()
+  exec_command(commands.post_notify_page)
 end
 
 ---Sends a notification to the server to initiate
----a reload the content of the preview website.
-function M.sendContentNotify()
-  execCommand(commands.post_notify_body)
+---a reload of the content of the preview website.
+function M.send_content_notify()
+  exec_command(commands.post_notify_body)
 end
 
 return M

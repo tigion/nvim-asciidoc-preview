@@ -5,27 +5,27 @@ local server = require('asciidoc-preview.server')
 local M = {}
 
 -- Creates auto commands
-local function createAutoCommands()
+local function create_auto_commands()
   -- https://neovim.io/doc/user/autocmd.html#autocmd-events
   local augroup = vim.api.nvim_create_augroup
   local autocmd = vim.api.nvim_create_autocmd
-  local myAugroup = augroup(vim.g.tigion_asciidocPreview_augroupName, { clear = false })
+  local my_augroup = augroup(vim.g.tigion_asciidocPreview_augroupName, { clear = false })
 
   -- Stops the preview when leaving Neovim
   autocmd('VimLeavePre', {
-    group = myAugroup,
+    group = my_augroup,
     callback = function()
-      require('asciidoc-preview').stopServer()
+      require('asciidoc-preview').stop_server()
     end,
   })
 
   -- Stops the preview when no other AsciiDoc buffers exists.
   autocmd('BufUnload', {
     pattern = { '*.asc', '*.adoc', '*.asciidoc' },
-    group = myAugroup,
+    group = my_augroup,
     callback = function()
       if not util.other_asciidoc_buffers_exists() then
-        require('asciidoc-preview').stopServer()
+        require('asciidoc-preview').stop_server()
       end
     end,
   })
@@ -40,28 +40,28 @@ local function createAutoCommands()
   autocmd({ 'WinEnter', 'BufWritePost' }, {
     pattern = { '*.asc', '*.adoc', '*.asciidoc' },
     --buffer = 0, -- 0 = current buffer number
-    group = myAugroup,
+    group = my_augroup,
     callback = function()
-      require('asciidoc-preview').sendFileToServer()
-      require('asciidoc-preview').notifyServer()
+      require('asciidoc-preview').send_file_to_server()
+      require('asciidoc-preview').notify_server()
     end,
   })
 end
 
 -- Clears auto commands
-local function clearAutoCommands()
+local function clear_auto_commands()
   vim.api.nvim_clear_autocmds({ group = vim.g.tigion_asciidocPreview_augroupName })
 end
 
 -- Creates user commands
-local function createUserCommands()
-  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require('asciidoc-preview').notifyServer, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require('asciidoc-preview').openBrowser, {})
-  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require('asciidoc-preview').stopServer, {})
+local function create_user_commands()
+  vim.api.nvim_create_user_command('AsciiDocPreviewNotify', require('asciidoc-preview').notify_server, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewOpen', require('asciidoc-preview').open_browser, {})
+  vim.api.nvim_create_user_command('AsciiDocPreviewStop', require('asciidoc-preview').stop_server, {})
 end
 
 -- Deletes user commands
-local function deleteUserCommands()
+local function delete_user_commands()
   vim.api.nvim_del_user_command('AsciiDocPreviewNotify')
   vim.api.nvim_del_user_command('AsciiDocPreviewOpen')
   vim.api.nvim_del_user_command('AsciiDocPreviewStop')
@@ -76,7 +76,7 @@ M.setup = config.setup
 
 -- Gets things ready and start the server.
 -- When started, open the preview in the web browser.
-function M.startServer()
+function M.start_server()
   if not util.is_asciidoc_buffer() then
     vim.notify(
       'nvim-asciidoc-preview: The preview can only be started if you are in an AsciiDoc file.',
@@ -84,53 +84,53 @@ function M.startServer()
     )
     return
   end
-  createAutoCommands()
-  createUserCommands()
+  create_auto_commands()
+  create_user_commands()
   server.start()
-  if server.isRunning() then
-    server.sendOptions()
-    M.sendFileToServer()
-    M.openBrowser() -- v1: here, v2: opens with node.js server
+  if server.is_running() then
+    server.send_options()
+    M.send_file_to_server()
+    M.open_browser() -- v1: here, v2: opens with node.js server
   else
     vim.notify('nvim-asciidoc-preview: Preview server failed to start.', vim.log.levels.WARN)
     vim.notify('Run `:checkhealth asciidoc-preview` to check the health of the plugin.', vim.log.levels.INFO)
-    M.stopServer()
+    M.stop_server()
   end
 end
 
 -- Stops the server and clean things up.
-function M.stopServer()
+function M.stop_server()
   server.stop()
-  clearAutoCommands()
-  deleteUserCommands()
+  clear_auto_commands()
+  delete_user_commands()
 end
 
 -- Sends a file to the server.
-function M.sendFileToServer()
+function M.send_file_to_server()
   local filepath = vim.fn.expand('%:p') -- file in the editor with full path
   local preview_position = -1 -- current scroll position
   if config.options.preview.position == 'start' then
     preview_position = 0 -- start of the website
   elseif config.options.preview.position == 'sync' then
-    preview_position = util.getCurrentLinePositionInPercent() -- same (similar) position as in Neovim
+    preview_position = util.get_current_line_position_in_percent() -- same (similar) position as in Neovim
   end
-  server.sendFile(filepath, preview_position)
+  server.send_file(filepath, preview_position)
 end
 
 -- Sends a notification to the server to refresh the preview page.
-function M.notifyServer()
+function M.notify_server()
   if config.options.preview.notify == 'content' then
-    server.sendContentNotify() -- notify content
+    server.send_content_notify() -- notify content
   else
-    server.sendPageNotify() -- notify page
+    server.send_page_notify() -- notify page
   end
 end
 
 -- Opens the preview in the web browser.
-function M.openBrowser()
-  local openCmd = util.getOpenCmd()
-  if openCmd ~= '' then
-    io.popen(openCmd .. ' ' .. config.server.url)
+function M.open_browser()
+  local open_cmd = util.get_open_cmd()
+  if open_cmd ~= '' then
+    io.popen(open_cmd .. ' ' .. config.server.url)
   end
 end
 
