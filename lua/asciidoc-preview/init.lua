@@ -32,12 +32,12 @@ local function create_auto_commands()
 
   -- Refreshes the preview when opening, saving or switching an AsciiDoc file.
   --
-  -- NOTE: In some cases `BufEnter` does not fire, so we use `WinEnter`
+  -- NOTE: In some cases `BufEnter` does not fire, so we use also `WinEnter`
   --
   -- TODO: TextChanged, TextChangedI
   --       - laggy: needs time framed and to send the buffer content
   --
-  autocmd({ 'WinEnter', 'BufWritePost' }, {
+  autocmd({ 'BufEnter', 'WinEnter', 'BufWritePost' }, {
     pattern = { '*.asc', '*.adoc', '*.asciidoc' },
     --buffer = 0, -- 0 = current buffer number
     group = my_augroup,
