@@ -6,7 +6,7 @@ A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 > The plugin is ~~in an early stage~~ not fully tested.
 > Use at your own risk.
 >
-> Works on: ✅ Linux, ✅ macOS and ✅ Windows with WSL
+> Works on: ✅ Linux, ✅ macOS and ✅ Windows with WSL2
 
 <img width="1000" alt="screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/9c4d75dc-bf1e-4209-9562-aff054262015">
 
