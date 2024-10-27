@@ -12,16 +12,15 @@ local error = vim.health.error or vim.health.report_error -- Reports an error.
 ---Checks if the current OS is supported.
 local function check_supported_os()
   local os = vim.uv.os_uname().sysname
-  -- get os name
 
-  if vim.fn.has('mac') then
+  if vim.fn.has('mac') == 1 then
     ok('macOS (' .. os .. ') supported')
-  elseif vim.fn.has('linux') then
+  elseif vim.fn.has('linux') == 1 then
     -- NOTE: NixOS is not yet supported!
     --       Write permissions of the plugin directory are currently a problem on NixOS.
     ok('Linux (' .. os .. ') supported (with limitations, e.g. NixOS)')
-  elseif vim.fn.has('wsl') then
-    warn('Windows WSL (' .. os .. ') not supported or not yet tested')
+  elseif vim.fn.has('wsl') == 1 then
+    warn('Windows WSL (' .. os .. ') supported (with limitations)')
   else
     error('Operating system (' .. os .. ') not supported or not yet tested')
   end
