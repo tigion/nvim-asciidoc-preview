@@ -13,6 +13,8 @@ local M = {}
 -- - os.execute(...)
 -- - execute('! ...')
 -- - vim.api.nvim_command(...)
+-- - vim.fn.jobstart(...) -> prefer vim.system() in Lua
+-- - vim.system(...)
 --
 ---@param cmd string
 ---@param server_must_run? boolean
@@ -21,6 +23,7 @@ local function exec_command(cmd, server_must_run)
   if M.is_running() == server_must_run then
     io.popen(cmd)
     -- os.execute(cmd)
+    -- vim.system({ ... }, { detach = true }) -- needs separated arguments ('curl -s ...' -> { 'curl', '-s', ... })
   end
 end
 

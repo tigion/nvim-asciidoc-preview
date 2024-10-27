@@ -140,10 +140,17 @@ function M.notify_server()
 end
 
 -- Opens the preview in the web browser.
+-- NOTE: execute open cmd:
+-- - `io.popen` and `os.execute` freezes neovim on Linux
+--   - https://github.com/tigion/nvim-asciidoc-preview/issues/9
+-- - `vim.fn.jobstart`: prefer `vim.system` in Lua
 function M.open_browser()
   local open_cmd = util.get_open_cmd()
   if open_cmd ~= '' then
-    io.popen(open_cmd .. ' ' .. config.server.url)
+    -- io.popen(open_cmd .. ' ' .. config.server.url)
+    -- os.execute(open_cmd .. ' ' .. config.server.url)
+    -- vim.fn.jobstart(open_cmd .. ' ' .. config.server.url, { detach = true })
+    vim.system({ open_cmd, config.server.url }, { detach = true })
   end
 end
 
