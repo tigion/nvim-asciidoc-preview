@@ -8,7 +8,7 @@ A simple AsciiDoc preview while editing AsciiDoc documents in Neovim.
 >
 > Works on: ✅ Linux, ✅ macOS and ✅ Windows with WSL2
 
-<img width="1000" alt="screenshot 2024-03-22" src="https://github.com/tigion/nvim-asciidoc-preview/assets/31811/9c4d75dc-bf1e-4209-9562-aff054262015">
+<img width="1000" alt="Screenshot 2024-10-30" src="https://github.com/user-attachments/assets/ac63f6df-292b-4d6d-8680-829083d0dc16">
 
 The plugin started as a playground for learning Neovim plugin programming
 with Lua and a server component with Node.js.
