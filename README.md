@@ -28,6 +28,8 @@ twice (plugin and server). Helpful tips are welcome.
   file is shown in the web browser.
 - The preview is updated every time the AsciiDoc file is saved or a new
   AsciiDoc file is opened.
+  - Updating the preview while typing is currently not supported.
+    A workaround can be found in the [FAQ](#faq-live-preview).
 - When exiting Neovim, no open Asciidoc files exists or using the
   `:AsciiDocPreviewStop` command, the preview server is terminated in the
   background.
@@ -178,6 +180,29 @@ vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', { desc = 'Preview Asci
   This way the keymap is only set for AsciiDoc files.
 
 ## FAQ
+
+### <a name="faq-live-preview"></a>Is there a way to update the preview as I edit the AsciiDoc document?
+
+The plugin itself does currently not support this.
+However, you can use an extra plugin for automatic saving like [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) or [nvim-autopairs](https://github.com/brianhuster/autosave.nvim) to automatically save the AsciiDoc document after every change.
+Thanks to [brianhuster](https://github.com/tigion/nvim-asciidoc-preview/issues/6#issuecomment-2370163011) for the idea.
+
+With [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) you can use the following [Condition](https://github.com/okuuva/auto-save.nvim#condition) to only automatically save AsciiDoc files:
+
+```lua
+opts = {
+  -- Activate automatic saving only for specified file types.
+  condition = function(buf)
+    local filetype = vim.fn.getbufvar(buf, "&filetype")
+    local filetypes = { 'asciidoc' } -- List of allowed file types.
+    return vim.list_contains(filetypes, filetype)
+  end,
+  -- I think a delay between 1000 and 3000 ms is okay.
+  -- To low delays might cause performance issues with
+  -- the rendering of the AsciiDoc preview!
+  debounce_delay = 2000,
+}
+```
 
 ### How do I report an issue?
 
