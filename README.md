@@ -29,7 +29,7 @@ twice (plugin and server). Helpful tips are welcome.
 - The preview is updated every time the AsciiDoc file is saved or a new
   AsciiDoc file is opened.
   - Updating the preview while typing is currently not supported.
-    A workaround can be found in the [FAQ](#faq-live-preview).
+    A workaround is in the [FAQ](#faq-live-preview).
 - When exiting Neovim, no open Asciidoc files exists or using the
   `:AsciiDocPreviewStop` command, the preview server is terminated in the
   background.
@@ -190,6 +190,7 @@ Thanks to [brianhuster](https://github.com/tigion/nvim-asciidoc-preview/issues/6
 With [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) you can use the following [Condition](https://github.com/okuuva/auto-save.nvim#condition) to only automatically save AsciiDoc files:
 
 ```lua
+-- Configuration part of the plugin auto-save.nvim
 opts = {
   -- Activate automatic saving only for specified file types.
   condition = function(buf)
