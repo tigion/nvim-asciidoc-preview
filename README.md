@@ -184,7 +184,7 @@ vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', { desc = 'Preview Asci
 ### <a name="faq-live-preview"></a>Is there a way to update the preview as I edit the AsciiDoc document?
 
 The plugin itself does currently not support this.
-However, you can use an extra plugin for automatic saving like [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) or [nvim-autopairs](https://github.com/brianhuster/autosave.nvim) to automatically save the AsciiDoc document after every change.
+However, you can use an extra plugin for automatic saving like [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) or [autosave.nvim](https://github.com/brianhuster/autosave.nvim) to automatically save the AsciiDoc document after every change.
 Thanks to [brianhuster](https://github.com/tigion/nvim-asciidoc-preview/issues/6#issuecomment-2370163011) for the idea.
 
 With [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) you can use the following [Condition](https://github.com/okuuva/auto-save.nvim#condition) to only automatically save AsciiDoc files:
