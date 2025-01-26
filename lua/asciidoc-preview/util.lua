@@ -111,13 +111,14 @@ function M.get_current_line_position_in_percent()
   return position
 end
 
----Returns true if the current buffer type is asciidoc.
+---Returns true if the current buffer type is asciidoc or asciidoctor.
 ---@param bufnr? number
 ---@return boolean
 ---@nodiscard
 function M.is_asciidoc_buffer(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
-  return vim.fn.getbufvar(bufnr, '&filetype') == 'asciidoc'
+  local ft = vim.fn.getbufvar(bufnr, '&filetype')
+  return ft == 'asciidoc' or ft == 'asciidoctor'
 end
 
 ---Returns the list of asciidoc buffers.

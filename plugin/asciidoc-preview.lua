@@ -29,9 +29,9 @@ end
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 augroup(vim.g.tigion_asciidocPreview_augroupName, { clear = true })
--- Creates auto commands for filetype `asciidoc`.
+-- Creates auto commands for filetype `asciidoc` and `asciidoctor`.
 autocmd('FileType', {
-  pattern = 'asciidoc',
+  pattern = { 'asciidoc', 'asciidoctor' },
   group = vim.g.tigion_asciidocPreview_augroupName,
   callback = function()
     -- Creates user commands
