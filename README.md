@@ -195,7 +195,7 @@ opts = {
   -- Activate automatic saving only for specified file types.
   condition = function(buf)
     local filetype = vim.fn.getbufvar(buf, "&filetype")
-    local filetypes = { 'asciidoc' } -- List of allowed file types.
+    local filetypes = { 'asciidoc', 'asciidoctor' } -- List of allowed file types.
     return vim.list_contains(filetypes, filetype)
   end,
   -- I think a delay between 1000 and 3000 ms is okay.
