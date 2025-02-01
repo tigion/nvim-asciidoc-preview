@@ -71,7 +71,7 @@ function convertWithAsciidoctorCmd(file, cacheDir) {
   //
   // convert mit Asciidoctor command
   const childProcess = require("child_process");
-  const stdout = childProcess.execSync(cmd, { stdio: "ignore" });
+  const stdout = childProcess.execSync(cmd);
 
   // add script for client registration and refresh event
   // (not perfect, but it works)
