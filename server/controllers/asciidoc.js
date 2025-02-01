@@ -11,7 +11,7 @@ function convertAsciidocToHtml(processor, file, cacheDir) {
     case "cmd":
       return convertWithAsciidoctorCmd(file, cacheDir);
     default:
-      return "<p>Invalid converter!</p>";
+      return "<p>Error: Invalid converter!</p>";
   }
 }
 
@@ -71,7 +71,21 @@ function convertWithAsciidoctorCmd(file, cacheDir) {
   //
   // convert mit Asciidoctor command
   const childProcess = require("child_process");
-  const stdout = childProcess.execSync(cmd);
+  const maxBuffer = 1024 * 1024 * 100;
+  // const maxBuffer = undefined;
+  let stdout;
+  try {
+    stdout = childProcess.execSync(cmd, { maxBuffer: maxBuffer });
+  } catch (error) {
+    console.log("ERROR: " + error);
+    return "<p>An error occurred while creating the preview.</p>";
+  }
+
+  // check if stdout is null
+  if (stdout == null) {
+    console.log("ERROR: stdout is null");
+    return "<p>Error: Nothing to preview!</p>";
+  }
 
   // add script for client registration and refresh event
   // (not perfect, but it works)
