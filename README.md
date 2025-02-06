@@ -62,7 +62,7 @@ The plugin allows optionally using the local installed Asciidoctor tools.
 {
   'tigion/nvim-asciidoc-preview',
   ft = { 'asciidoc' },
-  build = 'cd server && npm install',
+  build = 'cd server && npm install --omit=dev',
   opts = {
     -- Add user configuration here
   },
@@ -79,7 +79,7 @@ The plugin allows optionally using the local installed Asciidoctor tools.
 ```lua
 use({
   'tigion/nvim-asciidoc-preview',
-  run = 'cd server && npm install',
+  run = 'cd server && npm install --omit=dev',
   config = function()
     require('asciidoc-preview').setup({
       -- Add user configuration here
