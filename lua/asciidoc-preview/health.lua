@@ -1,3 +1,4 @@
+---@class asciidoc-preview.health
 local M = {}
 
 -- The "report_" prefix has been deprecated, use the recommended replacements if they exist.

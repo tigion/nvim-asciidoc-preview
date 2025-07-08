@@ -2,6 +2,7 @@ local util = require('asciidoc-preview.util')
 local config = require('asciidoc-preview.config')
 local server = require('asciidoc-preview.server')
 
+---@class asciidoc-preview
 local M = {}
 
 -- Creates auto commands

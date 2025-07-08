@@ -1,6 +1,6 @@
 local util = require('asciidoc-preview.util')
 
----@class AsciidocPreviewConfig
+---@class asciidoc-preview.config
 local M = {}
 
 ---@enum converters
@@ -12,7 +12,20 @@ local POSITIONS = { CURRENT = 'current', START = 'start', SYNC = 'sync' } -- Pre
 ---@enum refreshes
 local REFRESHES = { SAVE = 'save' } -- Preview refresh events
 
----@class AsciidocPreviewOptions
+---@class asciidoc-preview.ConfigServer
+---@field converter? converters
+---@field port? integer
+
+---@class asciidoc-preview.ConfigPreview
+---@field notify? notifies
+---@field position? positions
+---@field refresh? refreshes
+
+---@class asciidoc-preview.Config
+---@field server? asciidoc-preview.ConfigServer
+---@field preview? asciidoc-preview.ConfigPreview
+
+---@type asciidoc-preview.Config
 local defaults = {
   server = {
     -- Determines how the AsciiDoc file is converted to HTML for the preview.
@@ -44,7 +57,7 @@ local defaults = {
   },
 }
 
----@type AsciidocPreviewOptions
+---@type asciidoc-preview.Config
 M.options = vim.deepcopy(defaults)
 
 -- Set the needed directories
@@ -52,11 +65,13 @@ local root_dir = vim.g.tigion_asciidocPreview_rootDir ---@type string
 local log_dir = vim.fn.stdpath('log') ---@type string
 local cache_dir = vim.fn.stdpath('cache') ---@type string
 
----@class AsciidocPreviewServer
+---@class asciidoc-preview.Server
 ---@field start string The filepath of the start script for the server
 ---@field args table The arguments (option with parameter) for the start script
 ---@field url string The URL with port for the preview in the web browser
 ---@field hi string The validation message for the correct server
+
+---@type asciidoc-preview.Server
 M.server = {
   start = ('"%s/server/scripts/start.sh"'):format(root_dir),
   args = {
@@ -68,7 +83,7 @@ M.server = {
   hi = 'Coffee please',
 }
 
----@class AsciidocPreviewCommands
+---@class asciidoc-preview.Commands
 M.commands = {
   start = util.get_cmd_with_args(M.server.start, M.server.args),
   -- stylua: ignore start
@@ -82,12 +97,10 @@ M.commands = {
 }
 
 ---Setting up with the user options.
----@param opts? AsciidocPreviewOptions The table of user options
+---@param opts? asciidoc-preview.Config The table of user options
 function M.setup(opts)
-  -- Merged standard options with user options
-  -- FIX: Use defaults or M.options?
+  -- Merges the user config with the default config.
   M.options = vim.tbl_deep_extend('force', defaults, opts or {})
-  -- M.options = vim.tbl_deep_extend('force', M.options, opts or {})
 
   -- Validate options
   M.options.server.converter = util.validated_value(M.options.server.converter, CONVERTERS, defaults.server.converter)

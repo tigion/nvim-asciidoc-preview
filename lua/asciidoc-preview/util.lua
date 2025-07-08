@@ -1,3 +1,4 @@
+---@class asciidoc-preview.util
 local M = {}
 
 -- ---Checks if the current OS is Windows.

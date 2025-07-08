@@ -1,6 +1,7 @@
 local config = require('asciidoc-preview.config')
 local commands = require('asciidoc-preview.config').commands
 
+---@class asciidoc-preview.server
 local M = {}
 
 ---Executes a command if the server is running.
