@@ -185,17 +185,18 @@ vim.keymap.set('n', '<Leader>cp', ':AsciiDocPreview<CR>', { desc = 'Preview Asci
 
 ### <a name="faq-live-preview"></a>Is there a way to update the preview as I edit the AsciiDoc document?
 
+[auto-save.nvim]: https://github.com/okuuva/auto-save.nvim
+[autosave.nvim]: https://github.com/brianhuster/autosave.nvim
+
 The plugin itself does currently not support this. However, you can use an
-extra plugin for automatic saving like
-[auto-save.nvim](https://github.com/okuuva/auto-save.nvim) or
-[autosave.nvim](https://github.com/brianhuster/autosave.nvim) to automatically
-save the AsciiDoc document after every change. Thanks to
+extra plugin for automatic saving like [auto-save.nvim] or [autosave.nvim] to
+automatically save the AsciiDoc document after every change. Thanks to
 [brianhuster](https://github.com/tigion/nvim-asciidoc-preview/issues/6#issuecomment-2370163011)
 for the idea.
 
-With [auto-save.nvim](https://github.com/okuuva/auto-save.nvim) you can use the
-following [Condition](https://github.com/okuuva/auto-save.nvim#condition) to
-only automatically save AsciiDoc files:
+With [auto-save.nvim] you can use the following
+[Condition](https://github.com/okuuva/auto-save.nvim#condition) to only
+automatically save AsciiDoc files:
 
 ```lua
 -- Configuration part of the plugin auto-save.nvim
@@ -225,8 +226,8 @@ opts = {
 
 > [!WARNING]
 > The `nvim-asciidoc-preview-server.log` file contains **private information**
-> from the current/last session. These are, for example, the name of your
-> **home directory** and the names of the **AsciiDoc files** used.
+> from the current/last session. These are, for example, the (user) name of
+> your **home directory** and the file names of the **AsciiDoc files** used.
 >
-> Do **not** share this information with others.
-> So please remove or anonymize this information before.
+> If you **don't** want to share this information with others,
+> remove or anonymize the relevant parts.

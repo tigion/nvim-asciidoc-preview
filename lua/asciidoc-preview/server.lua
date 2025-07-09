@@ -1,10 +1,11 @@
 local config = require('asciidoc-preview.config')
+local notify = require('asciidoc-preview.notify')
 local commands = require('asciidoc-preview.config').commands
 
 ---@class asciidoc-preview.server
 local M = {}
 
----Executes a command if the server is running.
+---Executes a command depending on whether the server is running or not.
 --
 -- NOTE: execute command with:
 -- - io.popen(...)
@@ -17,8 +18,8 @@ local M = {}
 -- - vim.fn.jobstart(...) -> prefer vim.system() in Lua
 -- - vim.system(...)
 --
----@param cmd string
----@param server_must_run? boolean
+---@param cmd string The command to execute.
+---@param server_must_run? boolean Whether the server must be running.
 local function exec_command(cmd, server_must_run)
   server_must_run = server_must_run or true
   if M.is_running() == server_must_run then
@@ -44,11 +45,11 @@ function M.is_running()
   return nil
 end
 
----Starts the server if not running.
+---Starts the server if it is not running.
 function M.start()
   -- exec_command(command.start, false)
   if M.is_running() then
-    vim.notify('nvim-asciidoc-preview: The preview server is already running.', vim.log.levels.INFO)
+    notify.info('The preview server is already running.')
   else
     -- print('AsciiDocPreview: Starting ...')
     os.execute(commands.start) -- start server
@@ -66,9 +67,7 @@ function M.start()
 end
 
 ---Stops the server.
-function M.stop()
-  exec_command(commands.post_stop)
-end
+function M.stop() exec_command(commands.post_stop) end
 
 ---Sends the options to the server.
 function M.send_options()
@@ -79,8 +78,8 @@ function M.send_options()
 end
 
 ---Sends the filepath and position to the server.
----@param filepath string Filename with the full path
----@param position? integer Scroll position for the preview
+---@param filepath string The filename with the full path.
+---@param position? integer The scroll position for the preview.
 function M.send_file(filepath, position)
   position = position or -1
   local json = '\'{ "preview": { "filepath": "' .. filepath .. '", "position": ' .. position .. " } }'"
@@ -90,14 +89,10 @@ end
 
 ---Sends a notification to the server to initiate
 ---a reload of the preview website.
-function M.send_page_notify()
-  exec_command(commands.post_notify_page)
-end
+function M.send_page_notify() exec_command(commands.post_notify_page) end
 
 ---Sends a notification to the server to initiate
 ---a reload of the content of the preview website.
-function M.send_content_notify()
-  exec_command(commands.post_notify_body)
-end
+function M.send_content_notify() exec_command(commands.post_notify_body) end
 
 return M

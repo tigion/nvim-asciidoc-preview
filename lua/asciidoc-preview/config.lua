@@ -4,13 +4,13 @@ local util = require('asciidoc-preview.util')
 local M = {}
 
 ---@enum converters
-local CONVERTERS = { JS = 'js', CMD = 'cmd' } -- Server converters
+M.CONVERTERS = { JS = 'js', CMD = 'cmd' } -- Server converters
 ---@enum notifies
-local NOTIFIES = { PAGE = 'page' } -- Preview notification areas
+M.NOTIFIES = { PAGE = 'page' } -- Preview notification areas
 ---@enum positions
-local POSITIONS = { CURRENT = 'current', START = 'start', SYNC = 'sync' } -- Preview positions
+M.POSITIONS = { CURRENT = 'current', START = 'start', SYNC = 'sync' } -- Preview positions
 ---@enum refreshes
-local REFRESHES = { SAVE = 'save' } -- Preview refresh events
+M.REFRESHES = { SAVE = 'save' } -- Preview refresh events
 
 ---@class asciidoc-preview.ConfigServer
 ---@field converter? converters
@@ -65,9 +65,18 @@ local root_dir = vim.g.tigion_asciidocPreview_rootDir ---@type string
 local log_dir = vim.fn.stdpath('log') ---@type string
 local cache_dir = vim.fn.stdpath('cache') ---@type string
 
+---@class asciidoc-preview.ServerArg
+---@field option string
+---@field parameter string|integer
+
+---@class asciidoc-preview.ServerArgs
+---@field port asciidoc-preview.ServerArg
+---@field log_dir asciidoc-preview.ServerArg
+---@field cache_dir asciidoc-preview.ServerArg
+
 ---@class asciidoc-preview.Server
 ---@field start string The filepath of the start script for the server
----@field args table The arguments (option with parameter) for the start script
+---@field args asciidoc-preview.ServerArgs The arguments (option with parameter) for the start script
 ---@field url string The URL with port for the preview in the web browser
 ---@field hi string The validation message for the correct server
 
@@ -96,18 +105,18 @@ M.commands = {
   -- stylua: ignore end
 }
 
----Setting up with the user options.
----@param opts? asciidoc-preview.Config The table of user options
+---Sets up the plugin with the given user options.
+---@param opts? asciidoc-preview.Config The table of user options.
 function M.setup(opts)
   -- Merges the user config with the default config.
   M.options = vim.tbl_deep_extend('force', defaults, opts or {})
 
   -- Validate options
-  M.options.server.converter = util.validated_value(M.options.server.converter, CONVERTERS, defaults.server.converter)
+  M.options.server.converter = util.validated_value(M.options.server.converter, M.CONVERTERS, defaults.server.converter)
   M.options.server.port = util.validated_port(M.options.server.port, defaults.server.port)
-  M.options.preview.notify = util.validated_value(M.options.preview.notify, NOTIFIES, defaults.preview.notify)
-  M.options.preview.position = util.validated_value(M.options.preview.position, POSITIONS, defaults.preview.position)
-  M.options.preview.refresh = util.validated_value(M.options.preview.refresh, REFRESHES, defaults.preview.refresh)
+  M.options.preview.notify = util.validated_value(M.options.preview.notify, M.NOTIFIES, defaults.preview.notify)
+  M.options.preview.position = util.validated_value(M.options.preview.position, M.POSITIONS, defaults.preview.position)
+  M.options.preview.refresh = util.validated_value(M.options.preview.refresh, M.REFRESHES, defaults.preview.refresh)
 
   -- FIX: Optimize validation and config setup of server and commands
 

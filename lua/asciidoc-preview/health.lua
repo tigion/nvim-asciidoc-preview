@@ -28,8 +28,8 @@ local function check_supported_os()
 end
 
 ---Checks if the given executable is installed.
----@param name string Command name without arguments
----@param optional? boolean Optional flag
+---@param name string The command name without arguments.
+---@param optional? boolean Whether it is optional.
 local function check_executable(name, optional)
   if vim.fn.executable(name) == 1 then
     ok(name .. ' installed')
@@ -41,8 +41,8 @@ local function check_executable(name, optional)
 end
 
 ---Checks if the given ruby gem is installed.
----@param name string Gem name
----@param optional? boolean Optional flag
+---@param name string The gem name.
+---@param optional? boolean Whether it is optional.
 local function check_ruby_gem(name, optional)
   vim.fn.system('gem list --no-version | grep -q "^' .. name .. '$"')
   if vim.v.shell_error == 0 then
@@ -62,8 +62,8 @@ local function check_core_tools()
 end
 
 ---Checks if the given directory is writable.
----@param dir string Directory path
----@param name? string Optional Directory name
+---@param dir string The directory path.
+---@param name? string The optional Directory display name.
 local function check_directory(dir, name)
   if dir == nil then
     error((name or 'Directory') .. ' is not specified')

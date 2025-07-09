@@ -1,43 +1,41 @@
--- An AsciiDoc (live) preview plugin
+-- An AsciiDoc (live) preview plugin.
 -- URL: https://github.com/tigion/nvim-asciidoc-preview
 
--- Check plugin Neovim requirements
+local notify = require('asciidoc-preview.notify')
+
+-- Stops the plugin if Neovim does not have the required minimum version.
 if vim.fn.has('nvim-0.8') ~= 1 then
-  vim.opt_local.statusline = 'nvim-asciidoc-preview requires Neovim 0.8, or later'
+  notify.error('nvim-asciidoc-preview requires Neovim >= 0.8')
   return
 end
 
--- Load plugin only once
-if vim.g.tigion_asciidocPreview_loaded ~= nil then
-  return
-end
+-- Prevents the plugin from being loaded multiple times.
+if vim.g.tigion_asciidocPreview_loaded ~= nil then return end
 
--- Set neovim plugin variables
+-- Sets the required global Neovim (Vimscript) variables.
 vim.g.tigion_asciidocPreview_loaded = true
 vim.g.tigion_asciidocPreview_rootDir = vim.fn.expand('<sfile>:p:h:h')
 vim.g.tigion_asciidocPreview_augroupName = 'tigionAsciidocPreview'
 vim.g.tigion_asciidocPreview_isStarted = false
 
--- Checks if the plugin directory is writable
+-- Warns the user if the plugin directory is not writable.
 local plugin_dir = vim.g.tigion_asciidocPreview_rootDir
 if vim.fn.filewritable(plugin_dir) ~= 2 then
-  vim.notify('nvim-asciidoc-preview: Plugin directory is not writable!', vim.log.levels.WARN)
-  vim.notify('Run `:checkhealth asciidoc-preview` to check the health of the plugin.', vim.log.levels.INFO)
+  notify.warn('Plugin directory is not writable!', { show_check_health = true })
 end
 
--- Creates auto commands
+-- Adds an autocommand event handler that creates the buffer-local
+-- user commands only for supported filetypes.
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 augroup(vim.g.tigion_asciidocPreview_augroupName, { clear = true })
--- Creates auto commands for filetype `asciidoc` and `asciidoctor`.
 autocmd('FileType', {
   pattern = { 'asciidoc', 'asciidoctor' },
   group = vim.g.tigion_asciidocPreview_augroupName,
   callback = function()
-    -- Creates user commands
+    -- Creates only the initial user command to start the preview.
     vim.api.nvim_buf_create_user_command(0, 'AsciiDocPreview', require('asciidoc-preview').start_server, {})
-    if vim.g.tigion_asciidocPreview_isStarted then
-      require('asciidoc-preview').create_user_commands()
-    end
+    -- Creates all other user commands if the server has already been started.
+    if vim.g.tigion_asciidocPreview_isStarted then require('asciidoc-preview').create_user_commands() end
   end,
 })
