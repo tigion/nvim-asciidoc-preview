@@ -4,8 +4,8 @@
 local notify = require('asciidoc-preview.notify')
 
 -- Stops the plugin if Neovim does not have the required minimum version.
-if vim.fn.has('nvim-0.8') ~= 1 then
-  notify.error('nvim-asciidoc-preview requires Neovim >= 0.8')
+if vim.fn.has('nvim-0.10') ~= 1 then
+  notify.error('nvim-asciidoc-preview requires Neovim >= 0.10')
   return
 end
 

@@ -41,7 +41,7 @@ twice (plugin and server). Helpful tips are welcome.
 
 ## Requirements
 
-- Neovim >= 0.8
+- Neovim >= 0.10
 - Node.js with `node` and `npm` command
 - `curl` command
 
