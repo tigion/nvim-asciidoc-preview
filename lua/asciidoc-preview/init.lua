@@ -144,12 +144,16 @@ end
 
 ---Opens the preview in the web browser.
 --
+-- TODO: Check is `vim.ui.open` (Neovim 0.10+) is a better alternative.
+--
 -- NOTE: execute open cmd:
 -- - `io.popen` and `os.execute` freezes neovim on Linux
 --   - https://github.com/tigion/nvim-asciidoc-preview/issues/9
 -- - `vim.fn.jobstart`: prefer `vim.system` in Lua
 --
 function M.open_browser()
+  -- vim.ui.open(config.server.url)
+
   local open_cmd = util.get_open_cmd()
   if open_cmd ~= nil then
     -- io.popen(open_cmd .. ' ' .. config.server.url)

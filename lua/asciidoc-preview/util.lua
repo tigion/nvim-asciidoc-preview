@@ -78,14 +78,29 @@ end
 ---@nodiscard
 function M.get_open_cmd()
   local os = vim.uv.os_uname().sysname
-  if os == 'Darwin' then
+
+  -- if os == 'Darwin' then
+  --   return 'open'
+  -- elseif os == 'Linux' then
+  --   if vim.fn.has('wsl') == 1 then
+  --     return 'wslview'
+  --   else
+  --     return 'xdg-open'
+  --   end
+  -- end
+
+  if vim.fn.has('mac') == 1 then
+    -- macOS system
     return 'open'
-  elseif os == 'Linux' then
-    if vim.fn.has('wsl') == 1 then
-      return 'wslview'
-    else
-      return 'xdg-open'
-    end
+  elseif vim.fn.has('linux') == 1 or vim.fn.has('bsd') == 1 then
+    -- Linux or BSD system
+    return 'xdg-open'
+  elseif vim.fn.has('wsl') == 1 then
+    -- Windows Subsystem for Linux
+    return 'wslview'
+  elseif vim.fn.has('win32') == 1 then
+    -- Windows system (32 or 64 bit)
+    return 'start'
   end
 
   notify.warn('Open browser on ' .. os .. ' not yet supported')
