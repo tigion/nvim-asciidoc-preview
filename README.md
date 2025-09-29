@@ -135,17 +135,22 @@ Currently available settings for the user:
 ```lua
 {
   server = {
-    -- Determines how the AsciiDoc file is converted to HTML for the preview.
+    -- Specifies how the AsciiDoc file is converted to HTML for the preview.
     -- `js`  - asciidoctor.js (no local installation needed)
     -- `cmd` - asciidoctor command (local installation needed)
     converter = 'js',
 
-    -- Determines the local port of the preview website.
+    -- Specifies the hostname or IP address of the preview website for the client.
+    -- This is only needed if you run neovim in a remote session and
+    -- want to access the preview website from another machine.
+    hostname = 'localhost',
+
+    -- Specifies the port of the preview website on the client and server side.
     -- Must be between 10000 and 65535.
     port = 11235,
   },
   preview = {
-    -- Determines the scroll position of the preview website.
+    -- Specifies the scroll position of the preview website.
     -- `current` - Keep current scroll position
     -- `start`   - Start of the website
     -- `sync`    - (experimental) Same (similar) position as in Neovim

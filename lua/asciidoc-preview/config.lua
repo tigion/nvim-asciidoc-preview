@@ -15,6 +15,7 @@ M.REFRESHES = { SAVE = 'save' } -- Preview refresh events
 ---@class asciidoc-preview.ConfigServer
 ---@field converter? converters
 ---@field port? integer
+---@field hostname? string
 
 ---@class asciidoc-preview.ConfigPreview
 ---@field notify? notifies
@@ -28,12 +29,17 @@ M.REFRESHES = { SAVE = 'save' } -- Preview refresh events
 ---@type asciidoc-preview.Config
 local defaults = {
   server = {
-    -- Determines how the AsciiDoc file is converted to HTML for the preview.
+    -- Specifies how the AsciiDoc file is converted to HTML for the preview.
     -- `js`  - asciidoctor.js (no local installation needed)
     -- `cmd` - asciidoctor command (local installation needed)
     converter = 'js', ---@type converters
 
-    -- Determines the local port of the preview website.
+    -- Specifies the hostname or IP address of the preview website for the client.
+    -- This is only needed if you run neovim in a remote session and
+    -- want to access the preview website from another machine.
+    hostname = 'localhost', ---@type string
+
+    -- Specifies the port of the preview website on the client and server side.
     -- Must be between 10000 and 65535.
     port = 11235, ---@type integer
   },
@@ -88,7 +94,7 @@ M.server = {
     log_dir = { option = '--logdir', parameter = ('"%s"'):format(log_dir) },
     cache_dir = { option = '--cachedir', parameter = ('"%s"'):format(cache_dir) },
   },
-  url = 'http://localhost:' .. M.options.server.port,
+  url = 'http://' .. M.options.server.hostname .. ':' .. M.options.server.port,
   hi = 'Coffee please',
 }
 
@@ -113,6 +119,7 @@ function M.setup(opts)
 
   -- Validate options
   M.options.server.converter = util.validated_value(M.options.server.converter, M.CONVERTERS, defaults.server.converter)
+  M.options.server.hostname = util.validated_hostname(M.options.server.hostname, defaults.server.hostname)
   M.options.server.port = util.validated_port(M.options.server.port, defaults.server.port)
   M.options.preview.notify = util.validated_value(M.options.preview.notify, M.NOTIFIES, defaults.preview.notify)
   M.options.preview.position = util.validated_value(M.options.preview.position, M.POSITIONS, defaults.preview.position)
@@ -122,7 +129,7 @@ function M.setup(opts)
 
   -- Set server URL with port
   M.server.args.port.parameter = M.options.server.port
-  M.server.url = 'http://localhost:' .. M.options.server.port
+  M.server.url = 'http://' .. M.options.server.hostname .. ':' .. M.options.server.port
 
   -- Set commands
   M.commands.start = util.get_cmd_with_args(M.server.start, M.server.args)

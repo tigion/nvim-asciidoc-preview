@@ -33,6 +33,21 @@ function M.validated_value(value, valid_values, default)
   return vim.tbl_contains(valid_values, value) and value or default or nil
 end
 
+---Returns a valid hostname or IP address.
+---If not, the given default is returned.
+---
+--- NOTE: It only checks whether the hostname is not empty.
+---       There is no validation of an IP address.
+---
+---@param hostname string The hostname to be validated.
+---@param default string The default hostname if the hostname is not valid.
+---@return string hostname The validated hostname.
+---@nodiscard
+function M.validated_hostname(hostname, default)
+  if hostname == nil or hostname == '' then return default end
+  return hostname
+end
+
 ---Returns a valid port.
 ---If not, the given default port is returned.
 --
