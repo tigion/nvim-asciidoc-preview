@@ -26,6 +26,7 @@ function isValidConverter(converter) {
 
 // check if directory exisists and is writable
 function isValidDirectory(dir) {
+  if (dir === undefined || dir === "") return false;
   if (fs.existsSync(dir) && isReadableAndWritableDirectory(dir)) {
     return true;
   }
