@@ -27,22 +27,10 @@ local function check_supported_os()
   end
 end
 
-------Checks if the given executable is installed.
-------@param name string The command name without arguments.
-------@param optional? boolean Whether it is optional.
----local function check_executable(name, optional)
----  if vim.fn.executable(name) == 1 then
----    ok(name .. ' installed')
----  elseif optional or false then
----    warn(name .. ' not installed')
----  else
----    error(name .. ' not installed')
----  end
----end
-
 ---Checks if the given executable is installed.
 ---@param cmd_name string The command name without arguments.
 ---@param opts? {optional?: boolean, show_version?: boolean, version_cmd?: string} Additional options.
+---@return boolean True if the executable is installed, false otherwise.
 local function check_executable(cmd_name, opts)
   opts = opts or {}
   if opts.optional == nil then opts.optional = false end
@@ -57,11 +45,13 @@ local function check_executable(cmd_name, opts)
       cmd_version = '`' .. (version ~= '' and version or 'unknown version') .. '`'
     end
     ok(cmd_name .. ': ' .. (cmd_version or 'is installed'))
+    return true
   elseif opts.optional then
     warn(cmd_name .. ': is not installed')
   else
     error(cmd_name .. ': is not installed')
   end
+  return false
 end
 
 ---Checks if the given ruby gem is installed.
@@ -71,8 +61,7 @@ local function check_ruby_gem(gem_name, opts)
   opts = opts or {}
   if opts.optional == nil then opts.optional = false end
 
-  -- vim.fn.system('gem list --no-version | grep -q "^' .. gem_name .. '$"')
-  local version = vim.fn.system('gem list | grep "^' .. gem_name .. ' .*$"'):match('%((.*)%)')
+  local version = vim.fn.system("gem list | grep '^" .. gem_name .. " .*$'"):match('%((.*)%)')
   if vim.v.shell_error == 0 then
     ok('gem ' .. gem_name .. ': `' .. (version or 'unknown version') .. '`')
   elseif opts.optional then
@@ -112,23 +101,34 @@ end
 ---Checks required directories.
 local function check_directories()
   -- Plugin directory must be writable to allow installation of the needed node modules.
-  check_directory(vim.g.tigion_asciidocPreview_rootDir, 'Plugin directory')
+  if vim.g.tigion_asciidocPreview_rootDir == nil then
+    error('Plugin directory is not set (variable `tigion_asciidocPreview_rootDir` is nil)')
+  else
+    check_directory(vim.g.tigion_asciidocPreview_rootDir, 'Plugin directory')
+  end
   -- Log directory must be writable to write log files.
   local dir = vim.fn.stdpath('log')
-  check_directory(dir[1] or dir, 'Log directory')
+  check_directory(dir, 'Log directory')
   -- Cache directory must be writable to store temporary files for the html preview.
   dir = vim.fn.stdpath('cache')
-  check_directory(dir[1] or dir, 'Cache directory')
+  check_directory(dir, 'Cache directory')
 end
 
 ---Checks required Asciidoctor tools.
 local function check_asciidoctor()
-  info("The following warnings or errors can be ignored if Asciidoctor.js (`converter = 'js'`) is used.")
-  check_executable('ruby', { optional = true })
+  info(
+    'The following warnings or errors are only relevant\n'
+      .. "if a local installed Asciidoctor (`converter = 'cmd'`) is used."
+  )
   check_executable('asciidoctor', { optional = true })
-  check_ruby_gem('asciidoctor', { optional = true })
-  check_ruby_gem('asciidoctor-diagram', { optional = true })
-  -- check_ruby_gem('asciidoctor-diagram-plantuml', true)
+  check_executable('ruby', { optional = true })
+  local has_gem = check_executable('gem', { optional = true })
+  if has_gem then
+    check_ruby_gem('asciidoctor', { optional = true })
+    check_ruby_gem('asciidoctor-diagram', { optional = true })
+  else
+    info('Skipping ruby gem checks because `gem` command is not available.')
+  end
   info('More ruby gems can be needed depending on the used Asciidoctor extensions.')
 end
 
