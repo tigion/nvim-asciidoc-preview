@@ -1,7 +1,32 @@
 // controller/asciidoc.js
 
+const fs = require("fs");
+const path = require("path");
+
 // set reload script
 const reloadScript = '<script src="script.js"></script>';
+
+// Collect .asciidoctorconfig content by walking up from the file's directory.
+// Configs are collected root-first so that closer configs override parent ones
+// (Asciidoctor's last-attribute-wins behavior).
+function loadAsciidoctorConfigHeaders(file) {
+  const configs = [];
+  let dir = path.dirname(path.resolve(file));
+  const root = path.parse(dir).root;
+
+  while (dir !== root) {
+    for (const name of [".asciidoctorconfig", ".asciidoctorconfig.adoc"]) {
+      const configPath = path.join(dir, name);
+      if (!fs.existsSync(configPath)) continue;
+
+      const content = fs.readFileSync(configPath, "utf-8");
+      configs.push(`:asciidoctorconfigdir: ${dir}\n${content}`);
+    }
+    dir = path.dirname(dir);
+  }
+
+  return configs.reverse().join("\n");
+}
 
 // convert AsciiDoc to HTML
 function convertAsciidocToHtml(processor, file, cacheDir) {
@@ -33,16 +58,19 @@ function convertWithAsciidoctorJs(file) {
     });
   });
 
-  // convert file with Asciidoctor.js to html
-  return asciidoctor.convertFile(file, {
-    to_file: false,
+  // prepend .asciidoctorconfig headers (if present)
+  const configHeaders = loadAsciidoctorConfigHeaders(file);
+  const content = configHeaders + "\n" + fs.readFileSync(file, "utf-8");
+
+  // convert with Asciidoctor.js to html
+  return asciidoctor.convert(content, {
     standalone: true,
     safe: "unsafe", // unsafe: access files outside of the parent directory
+    base_dir: path.dirname(path.resolve(file)),
     attributes: {
       webfonts: "", // use webfonts
       "data-uri": "", // embed images (base64)
     },
-    //base_dir: '',
     extension_registry: registry,
   });
 }
