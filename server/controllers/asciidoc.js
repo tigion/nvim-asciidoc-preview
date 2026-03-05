@@ -1,5 +1,6 @@
 // controller/asciidoc.js
 
+// load required modules
 const fs = require("fs");
 const path = require("path");
 
@@ -28,20 +29,8 @@ function loadAsciidoctorConfigHeaders(file) {
   return configs.reverse().join("\n");
 }
 
-// convert AsciiDoc to HTML
-function convertAsciidocToHtml(processor, file, cacheDir) {
-  switch (processor) {
-    case "js":
-      return convertWithAsciidoctorJs(file);
-    case "cmd":
-      return convertWithAsciidoctorCmd(file, cacheDir);
-    default:
-      return "<p>Error: Invalid converter!</p>";
-  }
-}
-
 // convert with Asciidoctor.js
-function convertWithAsciidoctorJs(file) {
+function convertWithAsciidoctorJs(file, useAsciidoctorConfigs) {
   // needed Asciidoctor modules
   const Asciidoctor = require("asciidoctor");
   const asciidoctor = Asciidoctor();
@@ -58,12 +47,16 @@ function convertWithAsciidoctorJs(file) {
     });
   });
 
-  // prepend .asciidoctorconfig headers (if present)
-  const configHeaders = loadAsciidoctorConfigHeaders(file);
-  const content = configHeaders + "\n" + fs.readFileSync(file, "utf-8");
+  // read file content and prepend config headers (if present and enabled)
+  let content = fs.readFileSync(file, "utf-8");
+  if (useAsciidoctorConfigs) {
+    const configHeaders = loadAsciidoctorConfigHeaders(file);
+    content = configHeaders + "\n" + content;
+  }
 
   // convert with Asciidoctor.js to html
   return asciidoctor.convert(content, {
+    to_file: false,
     standalone: true,
     safe: "unsafe", // unsafe: access files outside of the parent directory
     base_dir: path.dirname(path.resolve(file)),
@@ -118,6 +111,23 @@ function convertWithAsciidoctorCmd(file, cacheDir) {
   // add script for client registration and refresh event
   // (not perfect, but it works)
   return stdout.toString() + reloadScript;
+}
+
+// convert AsciiDoc to HTML
+function convertAsciidocToHtml(
+  processor,
+  file,
+  cacheDir,
+  useAsciidoctorConfigs,
+) {
+  switch (processor) {
+    case "js":
+      return convertWithAsciidoctorJs(file, useAsciidoctorConfigs);
+    case "cmd":
+      return convertWithAsciidoctorCmd(file, cacheDir);
+    default:
+      return "<p>Error: Invalid converter!</p>";
+  }
 }
 
 // module exports

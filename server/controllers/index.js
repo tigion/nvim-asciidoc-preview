@@ -24,6 +24,7 @@ exports.page = (_req, res) => {
         data.config.asciidoc.converter,
         data.preview.filepath,
         data.config.cachedir,
+        data.config.useAsciidoctorConfigs,
       ),
     );
   } else {

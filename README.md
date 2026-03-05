@@ -36,6 +36,9 @@ twice (plugin and server). Helpful tips are welcome.
 - The generation of the HTML preview is done either with:
   - [Asciidoctor.js](https://docs.asciidoctor.org/asciidoctor.js/latest/)
     (default, no local installed Asciidoctor needed)
+    - There is an option to support Asciidoctor configuration files
+      (`.asciidoctorconfig` or `.asciidoctorconfig.adoc`). See the
+      [Configuration](#configuration) section for more details.
   - Or the locally installed [Asciidoctor](https://docs.asciidoctor.org/asciidoctor/latest/)
     tools (`asciidoctor` and `asciidoctor-diagram`).
 
@@ -156,6 +159,11 @@ Currently available settings for the user:
     -- `sync`    - (experimental) Same (similar) position as in Neovim
     --             => inaccurate, because very content dependent
     position = 'current',
+
+    -- Use Asciidoctor configuration files (.asciidoctorconfig or .asciidoctorconfig.adoc).
+    -- The nearest configurations win over the farther ones.
+    -- This option is only relevant if the server converter is set to `js`.
+    use_asciidoctor_configs = false, ---@type boolean
   },
 }
 ```

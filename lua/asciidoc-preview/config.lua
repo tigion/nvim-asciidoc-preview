@@ -60,6 +60,11 @@ local defaults = {
     -- `save` - Only when file is saved
     -- `live` - On content change -- TODO: not yet implemented (limit requests per time)
     refresh = 'save', ---@type refreshes
+
+    -- Use Asciidoctor configuration files (.asciidoctorconfig or .asciidoctorconfig.adoc).
+    -- The nearest configurations win over the farther ones.
+    -- This option is only relevant if the server converter is set to `js`.
+    use_asciidoctor_configs = false, ---@type boolean
   },
 }
 
@@ -93,6 +98,7 @@ M.server = {
     port = { option = '--port', parameter = M.options.server.port },
     log_dir = { option = '--logdir', parameter = ('"%s"'):format(log_dir) },
     cache_dir = { option = '--cachedir', parameter = ('"%s"'):format(cache_dir) },
+    -- use_asciidoctor_configs = { option = '--use-asciidoctor-configs', parameter = '' },
   },
   url = 'http://' .. M.options.server.hostname .. ':' .. M.options.server.port,
   hi = 'Coffee please',
@@ -124,6 +130,11 @@ function M.setup(opts)
   M.options.preview.notify = util.validated_value(M.options.preview.notify, M.NOTIFIES, defaults.preview.notify)
   M.options.preview.position = util.validated_value(M.options.preview.position, M.POSITIONS, defaults.preview.position)
   M.options.preview.refresh = util.validated_value(M.options.preview.refresh, M.REFRESHES, defaults.preview.refresh)
+  M.options.preview.use_asciidoctor_configs = util.validated_value(
+    M.options.preview.use_asciidoctor_configs,
+    { true, false },
+    defaults.preview.use_asciidoctor_configs
+  )
 
   -- FIX: Optimize validation and config setup of server and commands
 

@@ -21,6 +21,7 @@ exports.getOptions = (req, res) => {
   console.log("API: Sending json file");
   res.json({
     converter: data.config.asciidoc.converter,
+    useAsciidoctorConfigs: data.config.useAsciidoctorConfigs,
   });
 };
 
@@ -28,6 +29,7 @@ exports.getOptions = (req, res) => {
 exports.setOptions = (req, res) => {
   // get received data
   const newConverter = req.body.options.converter;
+  const newUseAsciidoctorConfigs = req.body.options.use_asciidoctor_configs;
 
   // check the given newConverter
   if (helper.isValidConverter(newConverter)) {
@@ -35,6 +37,20 @@ exports.setOptions = (req, res) => {
     data.config.asciidoc.converter = newConverter;
   } else {
     console.log(`API: Receiving invalid converter '${newConverter}'`);
+    res.status(400);
+    res.end();
+  }
+
+  // check the given newUseAsciidoctorConfigs
+  if (typeof newUseAsciidoctorConfigs === "boolean") {
+    console.log(
+      `API: Receiving valid use_asciidoctor_configs '${newUseAsciidoctorConfigs}'`,
+    );
+    data.config.useAsciidoctorConfigs = newUseAsciidoctorConfigs;
+  } else {
+    console.log(
+      `API: Receiving invalid use_asciidoctor_configs '${newUseAsciidoctorConfigs}'`,
+    );
     res.status(400);
     res.end();
   }

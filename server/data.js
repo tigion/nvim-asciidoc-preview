@@ -22,6 +22,9 @@ const config = {
   },
   // Determines whether the web browser should be opened
   openBrowser: false,
+
+  // Use Asciidoctor configuration files. Only supported for converter "js".
+  useAsciidoctorConfigs: false,
 };
 
 // The preview data

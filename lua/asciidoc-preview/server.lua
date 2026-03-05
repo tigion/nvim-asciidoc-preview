@@ -72,7 +72,12 @@ function M.stop() exec_command(commands.post_stop) end
 ---Sends the options to the server.
 function M.send_options()
   local converter = config.options.server.converter
-  local json = '\'{ "options": { "converter": "' .. converter .. '" } }\''
+  local use_asciidoctor_configs = config.options.preview.use_asciidoctor_configs
+  local opts = {
+    '"converter": "' .. converter .. '"',
+    '"use_asciidoctor_configs": ' .. (use_asciidoctor_configs == true and 'true' or 'false'),
+  }
+  local json = '\'{ "options": { ' .. table.concat(opts, ', ') .. " } }'"
   local cmd = commands.put_options .. ' -H "Content-Type: application/json"' .. ' -d ' .. json
   exec_command(cmd)
 end
