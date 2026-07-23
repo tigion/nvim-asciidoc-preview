@@ -13,20 +13,19 @@ const options = {
 };
 
 // send page templates or AsciiDoc preview to clients
-exports.page = (_req, res) => {
+exports.page = async (_req, res) => {
   if (data.preview.isFinished) {
     // send server has stopped HTML template
     res.sendFile(path.join(__dirname, "../templates/stop.html"), options);
   } else if (data.preview.filepath) {
     // send AsciiDoc file converted to HTML
-    res.send(
-      asciidoc.convertAsciidocToHtml(
-        data.config.asciidoc.converter,
-        data.preview.filepath,
-        data.config.cachedir,
-        data.config.useAsciidoctorConfigs,
-      ),
+    const html = await asciidoc.convertAsciidocToHtml(
+      data.config.asciidoc.converter,
+      data.preview.filepath,
+      data.config.cachedir,
+      data.config.useAsciidoctorConfigs,
     );
+    res.send(html);
   } else {
     // send server has started HTML template
     res.sendFile(path.join(__dirname, "../templates/wait.html"), options);

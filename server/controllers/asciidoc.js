@@ -3,6 +3,8 @@
 // load required modules
 const fs = require("fs");
 const path = require("path");
+const asciidoctor = require("asciidoctor");
+const kroki = require("asciidoctor-kroki");
 
 // set reload script
 const reloadScript = '<script src="script.js"></script>';
@@ -30,42 +32,45 @@ function loadAsciidoctorConfigHeaders(file) {
 }
 
 // convert with Asciidoctor.js
-function convertWithAsciidoctorJs(file, useAsciidoctorConfigs) {
-  // needed Asciidoctor modules
-  const Asciidoctor = require("asciidoctor");
-  const asciidoctor = Asciidoctor();
-  const kroki = require("asciidoctor-kroki");
-  kroki.register(asciidoctor.Extensions);
+async function convertWithAsciidoctorJs(file, useAsciidoctorConfigs) {
+  // Create a new extension registry.
   const registry = asciidoctor.Extensions.create();
 
-  // add script for client registration and refresh event
+  // Register the Kroki extension to handle diagrams.
+  kroki.register(registry);
+
+  // Add a docinfo processor to inject the reload script
+  // into the head of the HTML.
   registry.docinfoProcessor(function () {
-    const self = this;
-    self.atLocation("head");
-    self.process(function () {
-      return reloadScript;
-    });
+    this.atLocation("head");
+    this.process(() => reloadScript);
   });
 
-  // read file content and prepend config headers (if present and enabled)
-  let content = fs.readFileSync(file, "utf-8");
+  // Read file content.
+  let content = fs.readFileSync(file, "utf8");
+
+  // Prepend config headers (if present and enabled).
   if (useAsciidoctorConfigs) {
     const configHeaders = loadAsciidoctorConfigHeaders(file);
-    content = configHeaders + "\n" + content;
+    if (configHeaders) {
+      content = configHeaders + "\n" + content;
+    }
   }
 
-  // convert with Asciidoctor.js to html
-  return asciidoctor.convert(content, {
-    to_file: false,
+  // Convert with Asciidoctor.js to HTML.
+  const html = await asciidoctor.convert(content, {
     standalone: true,
-    safe: "unsafe", // unsafe: access files outside of the parent directory
+    to_file: false,
+    safe: "unsafe",
     base_dir: path.dirname(path.resolve(file)),
     attributes: {
-      webfonts: "", // use webfonts
-      "data-uri": "", // embed images (base64)
+      webfonts: "",
+      "data-uri": "",
     },
     extension_registry: registry,
   });
+
+  return html;
 }
 
 // convert with local installed Asciidoctor tools
@@ -114,7 +119,7 @@ function convertWithAsciidoctorCmd(file, cacheDir) {
 }
 
 // convert AsciiDoc to HTML
-function convertAsciidocToHtml(
+async function convertAsciidocToHtml(
   processor,
   file,
   cacheDir,
@@ -122,7 +127,7 @@ function convertAsciidocToHtml(
 ) {
   switch (processor) {
     case "js":
-      return convertWithAsciidoctorJs(file, useAsciidoctorConfigs);
+      return await convertWithAsciidoctorJs(file, useAsciidoctorConfigs);
     case "cmd":
       return convertWithAsciidoctorCmd(file, cacheDir);
     default:

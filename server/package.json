@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "asciidoctor": "3.0.4",
-    "asciidoctor-kroki": "0.18.1",
+    "asciidoctor": "4.0.5",
+    "asciidoctor-kroki": "1.0.1",
     "express": "5.2.1"
   },
   "devDependencies": {
